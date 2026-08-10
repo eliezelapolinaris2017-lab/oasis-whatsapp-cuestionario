@@ -19,145 +19,28 @@
     <section class="card" id="formCard">
       <header class="brand">
         <img class="brand-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" />
-        <div class="brand-copy">
-          <span class="official-badge">Formulario oficial</span>
-          <h1>Solicitud de Servicio</h1>
-          <p>Oasis Air Cleaner Services LLC · Área Metropolitana</p>
-        </div>
+        <div class="brand-copy"><span class="official-badge">Formulario oficial</span><h1>Solicitud de Servicio</h1><p>Oasis Air Cleaner Services LLC · Área Metropolitana</p></div>
       </header>
-
-      <div class="intro">
-        <strong>Solicita tu servicio en pocos pasos.</strong>
-        <span>Completa la información y luego sigue el proceso de reserva en el orden indicado.</span>
-      </div>
-
-      <div class="progress-wrap" aria-label="Progreso del formulario">
-        <div class="progress-bar"><span id="progressBar"></span></div>
-        <small id="progressText">Paso 1 de 5</small>
-      </div>
-
+      <div class="intro"><strong>Solicita tu servicio en pocos pasos.</strong><span>Completa la información y luego sigue el proceso de reserva en el orden indicado.</span></div>
+      <div class="progress-wrap" aria-label="Progreso del formulario"><div class="progress-bar"><span id="progressBar"></span></div><small id="progressText">Paso 1 de 5</small></div>
       <form id="serviceForm" novalidate>
-        <section class="step active" data-step="1">
-          <h2>Datos del cliente</h2>
-          <label>Nombre y apellido
-            <input type="text" name="name" required autocomplete="name" placeholder="Ej. Juan Pérez" />
-          </label>
-          <label>Número de teléfono
-            <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="787-000-0000" />
-          </label>
-          <label>Pueblo
-            <select name="town" required>
-              <option value="">Seleccione</option>
-              <option>Trujillo Alto</option><option>San Juan</option><option>Carolina</option><option>Guaynabo</option><option>Bayamón</option><option>Cataño</option><option>Toa Baja</option><option>Otro pueblo</option>
-            </select>
-          </label>
-          <label>Dirección / urbanización
-            <input type="text" name="address" required autocomplete="street-address" placeholder="Urbanización, calle o condominio" />
-          </label>
-          <label>Apartamento, acceso o referencia <span class="optional">(opcional)</span>
-            <input type="text" name="access" placeholder="Ej. Apt. 7, portón, edificio, referencia" />
-          </label>
-          <label>Tipo de propiedad
-            <select name="property" required>
-              <option value="">Seleccione</option>
-              <option>Casa</option><option>Apartamento</option><option>Condominio</option><option>Oficina</option><option>Comercio</option><option>Otro</option>
-            </select>
-          </label>
-          <label>¿Ya es cliente de Oasis?
-            <select name="existing" required>
-              <option value="">Seleccione</option>
-              <option value="Sí">Sí</option><option value="No">No, sería mi primera visita</option>
-            </select>
-          </label>
+        <section class="step active" data-step="1"><h2>Datos del cliente</h2>
+          <label>Nombre y apellido<input type="text" name="name" required autocomplete="name" placeholder="Ej. Juan Pérez" /></label>
+          <label>Número de teléfono<input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="787-000-0000" /></label>
+          <label>Pueblo<select name="town" required><option value="">Seleccione</option><option>Trujillo Alto</option><option>San Juan</option><option>Carolina</option><option>Guaynabo</option><option>Bayamón</option><option>Cataño</option><option>Toa Baja</option><option>Otro pueblo</option></select></label>
+          <label>Dirección / urbanización<input type="text" name="address" required autocomplete="street-address" placeholder="Urbanización, calle o condominio" /></label>
+          <label>Apartamento, acceso o referencia <span class="optional">(opcional)</span><input type="text" name="access" placeholder="Ej. Apt. 7, portón, edificio, referencia" /></label>
+          <label>Tipo de propiedad<select name="property" required><option value="">Seleccione</option><option>Casa</option><option>Apartamento</option><option>Condominio</option><option>Oficina</option><option>Comercio</option><option>Otro</option></select></label>
+          <label>¿Ya es cliente de Oasis?<select name="existing" required><option value="">Seleccione</option><option value="Sí">Sí</option><option value="No">No, sería mi primera visita</option></select></label>
         </section>
-
-        <section class="step" data-step="2">
-          <h2>¿Qué servicio necesita?</h2>
-          <p class="section-help">Seleccione una opción.</p>
-          <div class="choice-grid" id="serviceChoices">
-            <button type="button" class="choice" data-value="Mantenimiento preventivo"><span>🧼</span>Mantenimiento preventivo</button>
-            <button type="button" class="choice" data-value="Reparación / Diagnóstico"><span>🔧</span>Reparación / Diagnóstico</button>
-            <button type="button" class="choice" data-value="Instalación"><span>❄️</span>Instalación</button>
-            <button type="button" class="choice" data-value="Reubicación de equipo"><span>↔️</span>Reubicación</button>
-            <button type="button" class="choice" data-value="Cotización"><span>📝</span>Cotización</button>
-            <button type="button" class="choice" data-value="Otro"><span>＋</span>Otro</button>
-          </div>
-          <input type="hidden" name="service" required />
-        </section>
-
-        <section class="step" data-step="3">
-          <h2>Información del equipo</h2>
-          <label>Tipo de equipo
-            <select name="equipment" required>
-              <option value="">Seleccione</option>
-              <option>Mini Split</option><option>Piso / Techo</option><option>Wall Pack</option><option>Unidad Central</option><option>Otro</option><option>No estoy seguro</option>
-            </select>
-          </label>
-          <label>Cantidad de unidades
-            <input type="number" name="quantity" min="1" max="30" value="1" required inputmode="numeric" />
-          </label>
-          <label>Capacidad aproximada
-            <select name="btu" required>
-              <option value="">Seleccione</option>
-              <option>12,000 BTU</option><option>18,000 BTU</option><option>24,000 BTU</option><option>36,000 BTU</option><option>48,000 BTU</option><option>60,000 BTU</option><option>No sé</option>
-            </select>
-          </label>
-        </section>
-
-        <section class="step" data-step="4">
-          <div id="dynamicQuestions"></div>
-        </section>
-
-        <section class="step" data-step="5">
-          <h2>Revisa tu información</h2>
-          <div id="summary" class="summary"></div>
-          <div class="notice deposit" id="depositNotice" hidden>
-            <strong>Cliente nuevo:</strong> después de seleccionar una fecha disponible se requiere un depósito de $25 para reservar la primera cita. El depósito se acredita al balance final del servicio.
-          </div>
-          <label class="checkline">
-            <input type="checkbox" name="confirm" required />
-            <span>Confirmo que la información suministrada es correcta.</span>
-          </label>
-        </section>
-
-        <div class="actions">
-          <button type="button" id="backBtn" class="btn secondary" hidden>Atrás</button>
-          <button type="button" id="nextBtn" class="btn primary">Continuar</button>
-          <button type="submit" id="submitBtn" class="btn primary" hidden>Continuar al proceso de reserva</button>
-        </div>
+        <section class="step" data-step="2"><h2>¿Qué servicio necesita?</h2><p class="section-help">Seleccione una opción.</p><div class="choice-grid" id="serviceChoices"><button type="button" class="choice" data-value="Mantenimiento preventivo"><span>🧼</span>Mantenimiento preventivo</button><button type="button" class="choice" data-value="Reparación / Diagnóstico"><span>🔧</span>Reparación / Diagnóstico</button><button type="button" class="choice" data-value="Instalación"><span>❄️</span>Instalación</button><button type="button" class="choice" data-value="Reubicación de equipo"><span>↔️</span>Reubicación</button><button type="button" class="choice" data-value="Cotización"><span>📝</span>Cotización</button><button type="button" class="choice" data-value="Otro"><span>＋</span>Otro</button></div><input type="hidden" name="service" required /></section>
+        <section class="step" data-step="3"><h2>Información del equipo</h2><label>Tipo de equipo<select name="equipment" required><option value="">Seleccione</option><option>Mini Split</option><option>Piso / Techo</option><option>Wall Pack</option><option>Unidad Central</option><option>Otro</option><option>No estoy seguro</option></select></label><label>Cantidad de unidades<input type="number" name="quantity" min="1" max="30" value="1" required inputmode="numeric" /></label><label>Capacidad aproximada<select name="btu" required><option value="">Seleccione</option><option>12,000 BTU</option><option>18,000 BTU</option><option>24,000 BTU</option><option>36,000 BTU</option><option>48,000 BTU</option><option>60,000 BTU</option><option>No sé</option></select></label></section>
+        <section class="step" data-step="4"><div id="dynamicQuestions"></div></section>
+        <section class="step" data-step="5"><h2>Revisa tu información</h2><div id="summary" class="summary"></div><div class="notice deposit" id="depositNotice" hidden><strong>Cliente nuevo:</strong> después de seleccionar una fecha disponible se requiere un depósito de $25 para reservar la primera cita. El depósito se acredita al balance final del servicio.</div><label class="checkline"><input type="checkbox" name="confirm" required /><span>Confirmo que la información suministrada es correcta.</span></label><div class="actions final-actions"><button type="button" id="backBtnFinal" class="btn secondary">Atrás</button><button type="submit" id="submitBtn" class="btn primary">Continuar al proceso de reserva</button></div></section>
+        <div class="actions" id="navigationActions"><button type="button" id="backBtn" class="btn secondary" hidden>Atrás</button><button type="button" id="nextBtn" class="btn primary">Continuar</button></div>
       </form>
-
-      <div class="trust-row">
-        <span>🔒 Datos usados únicamente para coordinar su servicio.</span>
-        <span>📞 787-664-3079</span>
-      </div>
+      <div class="trust-row"><span>🔒 Datos usados únicamente para coordinar su servicio.</span><span>📞 787-664-3079</span></div>
     </section>
-
-    <section class="card done" id="doneCard" hidden>
-      <img class="done-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" />
-      <div class="success">✓</div>
-      <h2>Proceso de reserva</h2>
-      <p id="flowMessage">Sigue los pasos en orden. Ningún paso posterior se habilita antes de tiempo.</p>
-
-      <div class="flow-steps" aria-label="Pasos para completar la solicitud">
-        <div class="flow-step active" id="waStep"><span>1</span><div><strong>Enviar información</strong><small>Envía el resumen de tu solicitud a Oasis por WhatsApp.</small></div></div>
-        <div class="flow-step" id="calendarStep"><span>2</span><div><strong>Ver fechas y agendar</strong><small>Revisa los horarios y selecciona la cita que te funcione.</small></div></div>
-        <div class="flow-step" id="depositStep" hidden><span>3</span><div><strong>Depósito de $25</strong><small>Solo para clientes nuevos, después de seleccionar la cita.</small></div></div>
-        <div class="flow-step" id="confirmStep"><span id="confirmStepNumber">3</span><div><strong>Confirmar con Oasis</strong><small>Envía el mensaje final para solicitar la confirmación de tu cita.</small></div></div>
-      </div>
-
-      <div class="done-actions">
-        <a id="sendWhatsapp" class="btn whatsapp" href="#" target="_blank" rel="noopener">1. Enviar información por WhatsApp</a>
-        <a id="calendarBtn" class="btn primary locked" href="https://confirmafy.com/oasis-services-pr/cmer2orv0gxehp50f81ja0gy5" target="_blank" rel="noopener" aria-disabled="true">🔒 2. Ver fechas y agendar</a>
-        <a id="depositBtn" class="btn ath locked" href="https://pagos.athmovilapp.com/pagoPorCodigo.html?id=0a6458db-be6e-4c13-93a5-d4b858167f97" target="_blank" rel="noopener" aria-disabled="true" hidden>🔒 3. Pagar depósito $25</a>
-        <a id="finalConfirmBtn" class="btn confirm-btn locked" href="#" target="_blank" rel="noopener" aria-disabled="true">🔒 Confirmar mi cita por WhatsApp</a>
-        <button type="button" id="restartBtn" class="btn secondary">Nueva solicitud</button>
-      </div>
-
-      <div class="final-note" id="finalNote">Complete cada paso en orden. La cita queda pendiente de confirmación final por Oasis.</div>
-      <small class="fineprint">Oasis Air Cleaner Services LLC · 787-664-3079</small>
-    </section>
-  </main>
-  <script src="app.js"></script>
-</body>
-</html>
+    <section class="card done" id="doneCard" hidden><img class="done-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" /><div class="success">✓</div><h2>Proceso de reserva</h2><p id="flowMessage">Sigue los pasos en orden. Ningún paso posterior se habilita antes de tiempo.</p><div class="flow-steps" aria-label="Pasos para completar la solicitud"><div class="flow-step active" id="waStep"><span>1</span><div><strong>Enviar información</strong><small>Envía el resumen de tu solicitud a Oasis por WhatsApp.</small></div></div><div class="flow-step" id="calendarStep"><span>2</span><div><strong>Ver fechas y agendar</strong><small>Revisa los horarios y selecciona la cita que te funcione.</small></div></div><div class="flow-step" id="depositStep" hidden><span>3</span><div><strong>Depósito de $25</strong><small>Solo para clientes nuevos, después de seleccionar la cita.</small></div></div><div class="flow-step" id="confirmStep"><span id="confirmStepNumber">3</span><div><strong>Confirmar con Oasis</strong><small>Envía el mensaje final para solicitar la confirmación de tu cita.</small></div></div></div><div class="done-actions"><a id="sendWhatsapp" class="btn whatsapp" href="#" target="_blank" rel="noopener">1. Enviar información por WhatsApp</a><a id="calendarBtn" class="btn primary locked" href="https://confirmafy.com/oasis-services-pr/cmer2orv0gxehp50f81ja0gy5" target="_blank" rel="noopener" aria-disabled="true">🔒 2. Ver fechas y agendar</a><a id="depositBtn" class="btn ath locked" href="https://pagos.athmovilapp.com/pagoPorCodigo.html?id=0a6458db-be6e-4c13-93a5-d4b858167f97" target="_blank" rel="noopener" aria-disabled="true" hidden>🔒 3. Pagar depósito $25</a><a id="finalConfirmBtn" class="btn confirm-btn locked" href="#" target="_blank" rel="noopener" aria-disabled="true">🔒 Confirmar mi cita por WhatsApp</a><button type="button" id="restartBtn" class="btn secondary">Nueva solicitud</button></div><div class="final-note" id="finalNote">Complete cada paso en orden. La cita queda pendiente de confirmación final por Oasis.</div><small class="fineprint">Oasis Air Cleaner Services LLC · 787-664-3079</small></section>
+  </main><script src="app.js"></script>
+</body></html>
