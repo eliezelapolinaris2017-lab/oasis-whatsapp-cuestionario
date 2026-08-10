@@ -4,23 +4,29 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0f6b4b" />
-  <title>Solicitud de Servicio | Oasis</title>
+  <meta name="description" content="Solicitud de servicio de Oasis Air Cleaner Services LLC" />
+  <title>Solicitar servicio | Oasis</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app-shell">
     <section class="card" id="formCard">
-      <div class="brand">
-        <div class="brand-mark">O</div>
+      <header class="brand">
+        <div class="brand-mark" aria-hidden="true">O</div>
         <div>
           <h1>Oasis Air Cleaner Services LLC</h1>
-          <p>Solicitud de servicio</p>
+          <p>Solicitud de servicio · Área metropolitana</p>
         </div>
+      </header>
+
+      <div class="intro">
+        <strong>Solicita tu servicio en pocos pasos.</strong>
+        <span>Completa la información y al final podrás enviarla por WhatsApp y seleccionar tu cita.</span>
       </div>
 
-      <div class="progress-wrap" aria-label="Progreso">
+      <div class="progress-wrap" aria-label="Progreso del formulario">
         <div class="progress-bar"><span id="progressBar"></span></div>
-        <small id="progressText">Paso 1</small>
+        <small id="progressText">Paso 1 de 5</small>
       </div>
 
       <form id="serviceForm" novalidate>
@@ -29,8 +35,20 @@
           <label>Nombre y apellido
             <input type="text" name="name" required autocomplete="name" placeholder="Ej. Juan Pérez" />
           </label>
+          <label>Número de teléfono
+            <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="787-000-0000" />
+          </label>
           <label>Pueblo
-            <input type="text" name="town" required placeholder="Ej. Carolina" />
+            <select name="town" required>
+              <option value="">Seleccione</option>
+              <option>Trujillo Alto</option><option>San Juan</option><option>Carolina</option><option>Guaynabo</option><option>Bayamón</option><option>Cataño</option><option>Toa Baja</option><option>Otro pueblo</option>
+            </select>
+          </label>
+          <label>Dirección / urbanización
+            <input type="text" name="address" required autocomplete="street-address" placeholder="Urbanización, calle o condominio" />
+          </label>
+          <label>Apartamento, acceso o referencia <span class="optional">(opcional)</span>
+            <input type="text" name="access" placeholder="Ej. Apt. 7, portón, edificio, referencia" />
           </label>
           <label>Tipo de propiedad
             <select name="property" required>
@@ -38,7 +56,7 @@
               <option>Casa</option><option>Apartamento</option><option>Condominio</option><option>Oficina</option><option>Comercio</option><option>Otro</option>
             </select>
           </label>
-          <label>¿Es cliente de Oasis?
+          <label>¿Ya es cliente de Oasis?
             <select name="existing" required>
               <option value="">Seleccione</option>
               <option value="Sí">Sí</option><option value="No">No, sería mi primera visita</option>
@@ -47,14 +65,15 @@
         </section>
 
         <section class="step" data-step="2">
-          <h2>Servicio requerido</h2>
+          <h2>¿Qué servicio necesita?</h2>
+          <p class="section-help">Seleccione una opción.</p>
           <div class="choice-grid" id="serviceChoices">
-            <button type="button" class="choice" data-value="Mantenimiento preventivo">Mantenimiento preventivo</button>
-            <button type="button" class="choice" data-value="Reparación / Diagnóstico">Reparación / Diagnóstico</button>
-            <button type="button" class="choice" data-value="Instalación">Instalación</button>
-            <button type="button" class="choice" data-value="Reubicación de equipo">Reubicación</button>
-            <button type="button" class="choice" data-value="Cotización">Cotización</button>
-            <button type="button" class="choice" data-value="Otro">Otro</button>
+            <button type="button" class="choice" data-value="Mantenimiento preventivo"><span>🧼</span>Mantenimiento preventivo</button>
+            <button type="button" class="choice" data-value="Reparación / Diagnóstico"><span>🔧</span>Reparación / Diagnóstico</button>
+            <button type="button" class="choice" data-value="Instalación"><span>❄️</span>Instalación</button>
+            <button type="button" class="choice" data-value="Reubicación de equipo"><span>↔️</span>Reubicación</button>
+            <button type="button" class="choice" data-value="Cotización"><span>📝</span>Cotización</button>
+            <button type="button" class="choice" data-value="Otro"><span>＋</span>Otro</button>
           </div>
           <input type="hidden" name="service" required />
         </section>
@@ -68,7 +87,7 @@
             </select>
           </label>
           <label>Cantidad de unidades
-            <input type="number" name="quantity" min="1" max="30" value="1" required />
+            <input type="number" name="quantity" min="1" max="30" value="1" required inputmode="numeric" />
           </label>
           <label>Capacidad aproximada
             <select name="btu" required>
@@ -83,15 +102,15 @@
         </section>
 
         <section class="step" data-step="5">
-          <h2>Revisión</h2>
+          <h2>Revisa tu solicitud</h2>
           <div id="summary" class="summary"></div>
+          <div class="notice deposit" id="depositNotice" hidden>
+            <strong>Cliente nuevo:</strong> se requiere un depósito de $25 para reservar la primera cita. El depósito se acredita al balance final del servicio.
+          </div>
           <label class="checkline">
             <input type="checkbox" name="confirm" required />
             <span>Confirmo que la información suministrada es correcta.</span>
           </label>
-          <div class="notice" id="depositNotice">
-            Clientes nuevos pueden estar sujetos a un depósito de $25 para reservar el espacio. El depósito se acredita al balance final del servicio.
-          </div>
         </section>
 
         <div class="actions">
@@ -104,13 +123,14 @@
 
     <section class="card done" id="doneCard" hidden>
       <div class="success">✓</div>
-      <h2>Solicitud completada</h2>
-      <p>Tu información está lista. Envía el resumen a Oasis y luego selecciona la fecha y hora disponibles.</p>
+      <h2>Solicitud lista</h2>
+      <p><strong>Primero envía los datos a Oasis.</strong> Luego selecciona la fecha y horario disponible en el calendario.</p>
       <div class="done-actions">
-        <a id="sendWhatsapp" class="btn whatsapp" href="#" target="_blank" rel="noopener">Enviar datos por WhatsApp</a>
-        <a class="btn primary" href="https://confirmafy.com/oasis-services-pr/cmer2orv0gxehp50f81ja0gy5" target="_blank" rel="noopener">📅 Agendar mi servicio</a>
+        <a id="sendWhatsapp" class="btn whatsapp" href="#" target="_blank" rel="noopener">1. Enviar solicitud por WhatsApp</a>
+        <a class="btn primary" href="https://confirmafy.com/oasis-services-pr/cmer2orv0gxehp50f81ja0gy5" target="_blank" rel="noopener">2. Agendar mi cita</a>
         <button type="button" id="restartBtn" class="btn secondary">Nueva solicitud</button>
       </div>
+      <div class="final-note">La cita queda sujeta a las políticas y disponibilidad del servicio.</div>
       <small class="fineprint">Oasis Air Cleaner Services LLC · 787-664-3079</small>
     </section>
   </main>
