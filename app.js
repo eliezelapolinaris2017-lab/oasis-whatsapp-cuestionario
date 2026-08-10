@@ -8,7 +8,18 @@ const progressText = document.getElementById('progressText');
 const dynamic = document.getElementById('dynamicQuestions');
 const summary = document.getElementById('summary');
 const depositNotice = document.getElementById('depositNotice');
+const sendWhatsapp = document.getElementById('sendWhatsapp');
+const calendarBtn = document.getElementById('calendarBtn');
+const depositBtn = document.getElementById('depositBtn');
+const waStep = document.getElementById('waStep');
+const calendarStep = document.getElementById('calendarStep');
+const depositStep = document.getElementById('depositStep');
+const flowMessage = document.getElementById('flowMessage');
+const finalNote = document.getElementById('finalNote');
 let current = 0;
+let isNewClient = false;
+let whatsappOpened = false;
+let calendarOpened = false;
 
 const serviceInput = form.elements.service;
 
@@ -153,26 +164,88 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;' }[c]));
 }
 
+function setLocked(el, locked, labelLocked, labelOpen) {
+  el.classList.toggle('locked', locked);
+  el.setAttribute('aria-disabled', locked ? 'true' : 'false');
+  el.textContent = locked ? labelLocked : labelOpen;
+}
+
+function resetCompletionFlow() {
+  whatsappOpened = false;
+  calendarOpened = false;
+  waStep.classList.add('active');
+  waStep.classList.remove('done-step');
+  calendarStep.classList.remove('active', 'done-step');
+  depositStep.classList.remove('active', 'done-step');
+  setLocked(calendarBtn, true, '🔒 2. Ver fechas y agendar', '2. Ver fechas y agendar');
+  setLocked(depositBtn, true, '🔒 3. Pagar depósito $25', '3. Pagar depósito $25');
+}
+
 form.addEventListener('submit', e => {
   e.preventDefault();
   if (!validateStep()) return;
 
   const d = dataObject();
+  isNewClient = d.existing === 'No';
   const lines = ['*NUEVA SOLICITUD DE SERVICIO - OASIS*', ''];
   Object.entries(d)
     .filter(([k, v]) => v && k !== 'confirm')
     .forEach(([k, v]) => lines.push(`*${labelize(k)}:* ${v}`));
 
-  if (d.existing === 'No') {
-    lines.push('', '⚠️ Cliente nuevo: aplica depósito de $25 para reservar la primera cita.');
+  if (isNewClient) {
+    lines.push('', '⚠️ Cliente nuevo: luego de seleccionar una fecha disponible aplica depósito de $25 para reservar la primera cita.');
   }
   lines.push('', 'Solicitud completada desde el cuestionario de Oasis.');
 
-  const wa = `https://wa.me/17876643079?text=${encodeURIComponent(lines.join('\n'))}`;
-  document.getElementById('sendWhatsapp').href = wa;
+  sendWhatsapp.href = `https://wa.me/17876643079?text=${encodeURIComponent(lines.join('\n'))}`;
+  resetCompletionFlow();
+  depositStep.hidden = !isNewClient;
+  depositBtn.hidden = !isNewClient;
+
+  flowMessage.textContent = isNewClient
+    ? 'Primero envía la información. Luego revisa las fechas disponibles y, si escoges una, realiza el depósito de $25.'
+    : 'Primero envía la información. Luego revisa las fechas disponibles y agenda tu cita.';
+  finalNote.textContent = isNewClient
+    ? 'El depósito se habilita después de abrir el calendario para que puedas verificar primero si las fechas disponibles te funcionan.'
+    : 'Los clientes existentes no requieren depósito para continuar con la agenda.';
+
   document.getElementById('formCard').hidden = true;
   document.getElementById('doneCard').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+sendWhatsapp.addEventListener('click', () => {
+  whatsappOpened = true;
+  waStep.classList.remove('active');
+  waStep.classList.add('done-step');
+  calendarStep.classList.add('active');
+  setLocked(calendarBtn, false, '🔒 2. Ver fechas y agendar', '2. Ver fechas y agendar');
+});
+
+calendarBtn.addEventListener('click', e => {
+  if (!whatsappOpened) {
+    e.preventDefault();
+    return;
+  }
+  calendarOpened = true;
+  calendarStep.classList.remove('active');
+  calendarStep.classList.add('done-step');
+
+  if (isNewClient) {
+    depositStep.classList.add('active');
+    setLocked(depositBtn, false, '🔒 3. Pagar depósito $25', '3. Pagar depósito $25');
+  } else {
+    finalNote.textContent = 'Listo. Como cliente existente, no se requiere depósito.';
+  }
+});
+
+depositBtn.addEventListener('click', e => {
+  if (!calendarOpened || !isNewClient) {
+    e.preventDefault();
+    return;
+  }
+  depositStep.classList.remove('active');
+  depositStep.classList.add('done-step');
 });
 
 document.getElementById('restartBtn').addEventListener('click', () => {
@@ -183,6 +256,10 @@ document.getElementById('restartBtn').addEventListener('click', () => {
   summary.innerHTML = '';
   depositNotice.hidden = true;
   current = 0;
+  isNewClient = false;
+  resetCompletionFlow();
+  depositStep.hidden = true;
+  depositBtn.hidden = true;
   updateUI();
   document.getElementById('doneCard').hidden = true;
   document.getElementById('formCard').hidden = false;
