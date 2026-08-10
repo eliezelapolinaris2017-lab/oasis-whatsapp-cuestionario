@@ -19,12 +19,14 @@ const confirmStep = document.getElementById('confirmStep');
 const confirmStepNumber = document.getElementById('confirmStepNumber');
 const flowMessage = document.getElementById('flowMessage');
 const finalNote = document.getElementById('finalNote');
+const formCard = document.getElementById('formCard');
+const doneCard = document.getElementById('doneCard');
+
+const FLOW_KEY = 'oasisReservationFlow';
 let current = 0;
 let isNewClient = false;
-let whatsappOpened = false;
-let calendarOpened = false;
-let depositOpened = false;
 let completionData = {};
+let flowStage = 0; // 0=sin iniciar, 1=WhatsApp, 2=agenda, 3=depósito/confirmación existente, 4=confirmación nuevo
 
 const serviceInput = form.elements.service;
 
@@ -169,55 +171,23 @@ function setLocked(el, locked, labelLocked, labelOpen) {
   el.textContent = locked ? labelLocked : labelOpen;
 }
 
-function buildFinalConfirmationLink() {
+function saveFlow() {
+  try {
+    sessionStorage.setItem(FLOW_KEY, JSON.stringify({
+      active: true,
+      isNewClient,
+      flowStage,
+      completionData
+    }));
+  } catch (_) {}
+}
+
+function clearFlow() {
+  try { sessionStorage.removeItem(FLOW_KEY); } catch (_) {}
+}
+
+function buildInitialWhatsAppLink() {
   const d = completionData;
-  const lines = ['*SOLICITUD DE CONFIRMACIÓN DE CITA - OASIS*', ''];
-  lines.push(`*Cliente:* ${d.name || ''}`);
-  lines.push(`*Teléfono:* ${d.phone || ''}`);
-  lines.push(`*Servicio:* ${d.service || ''}`);
-  lines.push(`*Pueblo:* ${d.town || ''}`);
-  lines.push('');
-  if (isNewClient) {
-    lines.push('✅ Ya envié mi información.');
-    lines.push('✅ Ya seleccioné mi cita en el calendario.');
-    lines.push('✅ Ya realicé el depósito de $25 por ATH Móvil.');
-  } else {
-    lines.push('✅ Ya envié mi información.');
-    lines.push('✅ Ya seleccioné mi cita en el calendario.');
-    lines.push('ℹ️ Soy cliente existente; no requiere depósito inicial.');
-  }
-  lines.push('', 'Deseo solicitar la confirmación final de mi cita.');
-  finalConfirmBtn.href = `https://wa.me/17876643079?text=${encodeURIComponent(lines.join('\n'))}`;
-}
-
-function unlockFinalConfirmation() {
-  confirmStep.classList.add('active');
-  setLocked(finalConfirmBtn, false, '🔒 Confirmar mi cita por WhatsApp', `${isNewClient ? '4' : '3'}. Confirmar mi cita por WhatsApp`);
-  buildFinalConfirmationLink();
-  finalNote.textContent = 'Último paso: envía el mensaje de confirmación a Oasis. La cita queda pendiente hasta que Oasis la valide.';
-}
-
-function resetCompletionFlow() {
-  whatsappOpened = false;
-  calendarOpened = false;
-  depositOpened = false;
-  waStep.classList.add('active');
-  waStep.classList.remove('done-step');
-  calendarStep.classList.remove('active', 'done-step');
-  depositStep.classList.remove('active', 'done-step');
-  confirmStep.classList.remove('active', 'done-step');
-  setLocked(calendarBtn, true, '🔒 2. Ver fechas y agendar', '2. Ver fechas y agendar');
-  setLocked(depositBtn, true, '🔒 3. Pagar depósito $25', '3. Pagar depósito $25');
-  setLocked(finalConfirmBtn, true, '🔒 Confirmar mi cita por WhatsApp', 'Confirmar mi cita por WhatsApp');
-  finalConfirmBtn.href = '#';
-}
-
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  if (!validateStep()) return;
-  const d = dataObject();
-  completionData = d;
-  isNewClient = d.existing === 'No';
   const lines = ['*NUEVA SOLICITUD DE SERVICIO - OASIS*', ''];
   Object.entries(d)
     .filter(([k, v]) => v && k !== 'confirm')
@@ -227,67 +197,151 @@ form.addEventListener('submit', e => {
   }
   lines.push('', 'Solicitud completada desde el cuestionario de Oasis.');
   sendWhatsapp.href = `https://wa.me/17876643079?text=${encodeURIComponent(lines.join('\n'))}`;
-  resetCompletionFlow();
+}
+
+function buildFinalConfirmationLink() {
+  const d = completionData;
+  const lines = ['*SOLICITUD DE CONFIRMACIÓN DE CITA - OASIS*', ''];
+  lines.push(`*Cliente:* ${d.name || ''}`);
+  lines.push(`*Teléfono:* ${d.phone || ''}`);
+  lines.push(`*Servicio:* ${d.service || ''}`);
+  lines.push(`*Pueblo:* ${d.town || ''}`);
+  lines.push('');
+  lines.push('✅ Ya envié mi información.');
+  lines.push('✅ Ya seleccioné mi cita en el calendario.');
+  if (isNewClient) {
+    lines.push('✅ Ya realicé el depósito de $25 por ATH Móvil.');
+  } else {
+    lines.push('ℹ️ Soy cliente existente; no requiere depósito inicial.');
+  }
+  lines.push('', 'Deseo solicitar la confirmación final de mi cita.');
+  finalConfirmBtn.href = `https://wa.me/17876643079?text=${encodeURIComponent(lines.join('\n'))}`;
+}
+
+function resetFlowUI() {
+  [waStep, calendarStep, depositStep, confirmStep].forEach(el => el.classList.remove('active', 'done-step'));
+  waStep.classList.add('active');
+  sendWhatsapp.textContent = '1. Enviar información por WhatsApp';
+  setLocked(calendarBtn, true, '🔒 2. Ver fechas y agendar', '2. Ver fechas y agendar');
+  setLocked(depositBtn, true, '🔒 3. Pagar depósito $25', '3. Pagar depósito $25');
+  setLocked(finalConfirmBtn, true, '🔒 Confirmar mi cita por WhatsApp', 'Confirmar mi cita por WhatsApp');
+  finalConfirmBtn.href = '#';
+}
+
+function renderFlowState() {
+  resetFlowUI();
   depositStep.hidden = !isNewClient;
   depositBtn.hidden = !isNewClient;
   confirmStepNumber.textContent = isNewClient ? '4' : '3';
+
   flowMessage.textContent = isNewClient
-    ? 'Envía tu información, selecciona una cita, realiza el depósito y luego solicita la confirmación final por WhatsApp.'
-    : 'Envía tu información, selecciona una cita y luego solicita la confirmación final por WhatsApp.';
-  finalNote.textContent = isNewClient
-    ? 'El depósito se habilita después de abrir el calendario. La confirmación final se habilita después del depósito.'
-    : 'Como cliente existente no necesitas depósito. La confirmación final se habilita después de abrir el calendario.';
-  document.getElementById('formCard').hidden = true;
-  document.getElementById('doneCard').hidden = false;
+    ? 'Sigue este orden: enviar información → agendar → depósito → confirmar con Oasis.'
+    : 'Sigue este orden: enviar información → agendar → confirmar con Oasis.';
+
+  if (flowStage >= 1) {
+    waStep.classList.remove('active');
+    waStep.classList.add('done-step');
+    sendWhatsapp.textContent = '✓ 1. Información enviada / abrir WhatsApp';
+    calendarStep.classList.add('active');
+    setLocked(calendarBtn, false, '🔒 2. Ver fechas y agendar', '2. Ver fechas y agendar');
+  }
+
+  if (flowStage >= 2) {
+    calendarStep.classList.remove('active');
+    calendarStep.classList.add('done-step');
+    calendarBtn.textContent = '✓ 2. Calendario abierto / volver a ver';
+    if (isNewClient) {
+      depositStep.classList.add('active');
+      setLocked(depositBtn, false, '🔒 3. Pagar depósito $25', '3. Pagar depósito $25');
+    } else {
+      confirmStep.classList.add('active');
+      setLocked(finalConfirmBtn, false, '🔒 Confirmar mi cita por WhatsApp', '3. Confirmar mi cita por WhatsApp');
+      buildFinalConfirmationLink();
+    }
+  }
+
+  if (isNewClient && flowStage >= 3) {
+    depositStep.classList.remove('active');
+    depositStep.classList.add('done-step');
+    depositBtn.textContent = '✓ 3. ATH Móvil abierto / volver a pagar';
+    confirmStep.classList.add('active');
+    setLocked(finalConfirmBtn, false, '🔒 Confirmar mi cita por WhatsApp', '4. Confirmar mi cita por WhatsApp');
+    buildFinalConfirmationLink();
+  }
+
+  if ((!isNewClient && flowStage >= 3) || (isNewClient && flowStage >= 4)) {
+    confirmStep.classList.remove('active');
+    confirmStep.classList.add('done-step');
+    finalConfirmBtn.textContent = `✓ ${isNewClient ? '4' : '3'}. Confirmación abierta en WhatsApp`;
+    finalNote.textContent = 'Oasis verificará la cita y, cuando aplique, el depósito antes de dar la confirmación final.';
+  } else if (isNewClient && flowStage >= 3) {
+    finalNote.textContent = 'ATH Móvil ya fue abierto. Ahora envía el mensaje final por WhatsApp para solicitar la confirmación de tu cita.';
+  } else if (!isNewClient && flowStage >= 2) {
+    finalNote.textContent = 'Como cliente existente no necesitas depósito. Ahora envía el mensaje final por WhatsApp.';
+  } else {
+    finalNote.textContent = 'Complete cada paso en orden. La cita queda pendiente de confirmación final por Oasis.';
+  }
+}
+
+function showReservationFlow() {
+  formCard.hidden = true;
+  doneCard.hidden = false;
+  buildInitialWhatsAppLink();
+  renderFlowState();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  if (!validateStep()) return;
+
+  completionData = dataObject();
+  isNewClient = completionData.existing === 'No';
+  flowStage = 0;
+  saveFlow();
+  showReservationFlow();
 });
 
 sendWhatsapp.addEventListener('click', () => {
-  whatsappOpened = true;
-  waStep.classList.remove('active');
-  waStep.classList.add('done-step');
-  calendarStep.classList.add('active');
-  setLocked(calendarBtn, false, '🔒 2. Ver fechas y agendar', '2. Ver fechas y agendar');
+  if (flowStage < 1) flowStage = 1;
+  saveFlow();
+  renderFlowState();
 });
 
 calendarBtn.addEventListener('click', e => {
-  if (!whatsappOpened) {
+  if (flowStage < 1) {
     e.preventDefault();
     return;
   }
-  calendarOpened = true;
-  calendarStep.classList.remove('active');
-  calendarStep.classList.add('done-step');
-  if (isNewClient) {
-    depositStep.classList.add('active');
-    setLocked(depositBtn, false, '🔒 3. Pagar depósito $25', '3. Pagar depósito $25');
-  } else {
-    unlockFinalConfirmation();
-  }
+  if (flowStage < 2) flowStage = 2;
+  saveFlow();
+  renderFlowState();
 });
 
 depositBtn.addEventListener('click', e => {
-  if (!calendarOpened || !isNewClient) {
+  if (!isNewClient || flowStage < 2) {
     e.preventDefault();
     return;
   }
-  depositOpened = true;
-  depositStep.classList.remove('active');
-  depositStep.classList.add('done-step');
-  unlockFinalConfirmation();
+  // Guardar ANTES de salir a ATH Móvil para que iPhone restaure correctamente al volver.
+  if (flowStage < 3) flowStage = 3;
+  saveFlow();
+  renderFlowState();
 });
 
 finalConfirmBtn.addEventListener('click', e => {
-  if (finalConfirmBtn.classList.contains('locked')) {
+  const requiredStage = isNewClient ? 3 : 2;
+  if (flowStage < requiredStage || finalConfirmBtn.classList.contains('locked')) {
     e.preventDefault();
     return;
   }
-  confirmStep.classList.remove('active');
-  confirmStep.classList.add('done-step');
-  finalNote.textContent = 'Solicitud de confirmación enviada. Oasis verificará la cita y el depósito cuando aplique.';
+  flowStage = isNewClient ? 4 : 3;
+  saveFlow();
+  renderFlowState();
 });
 
 document.getElementById('restartBtn').addEventListener('click', () => {
+  clearFlow();
   form.reset();
   document.querySelectorAll('.choice').forEach(b => b.classList.remove('selected'));
   serviceInput.value = '';
@@ -297,13 +351,34 @@ document.getElementById('restartBtn').addEventListener('click', () => {
   current = 0;
   isNewClient = false;
   completionData = {};
-  resetCompletionFlow();
+  flowStage = 0;
   depositStep.hidden = true;
   depositBtn.hidden = true;
-  confirmStepNumber.textContent = '3';
   updateUI();
-  document.getElementById('doneCard').hidden = true;
-  document.getElementById('formCard').hidden = false;
+  doneCard.hidden = true;
+  formCard.hidden = false;
 });
 
-updateUI();
+function restoreFlowIfNeeded() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(FLOW_KEY) || 'null');
+    if (!saved?.active || !saved.completionData) return false;
+    completionData = saved.completionData;
+    isNewClient = !!saved.isNewClient;
+    flowStage = Number(saved.flowStage || 0);
+    showReservationFlow();
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+window.addEventListener('pageshow', () => {
+  if (!doneCard.hidden) renderFlowState();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && !doneCard.hidden) renderFlowState();
+});
+
+if (!restoreFlowIfNeeded()) updateUI();
