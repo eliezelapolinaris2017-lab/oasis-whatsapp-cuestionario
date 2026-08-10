@@ -11,15 +11,20 @@ const depositNotice = document.getElementById('depositNotice');
 const sendWhatsapp = document.getElementById('sendWhatsapp');
 const calendarBtn = document.getElementById('calendarBtn');
 const depositBtn = document.getElementById('depositBtn');
+const finalConfirmBtn = document.getElementById('finalConfirmBtn');
 const waStep = document.getElementById('waStep');
 const calendarStep = document.getElementById('calendarStep');
 const depositStep = document.getElementById('depositStep');
+const confirmStep = document.getElementById('confirmStep');
+const confirmStepNumber = document.getElementById('confirmStepNumber');
 const flowMessage = document.getElementById('flowMessage');
 const finalNote = document.getElementById('finalNote');
 let current = 0;
 let isNewClient = false;
 let whatsappOpened = false;
 let calendarOpened = false;
+let depositOpened = false;
+let completionData = {};
 
 const serviceInput = form.elements.service;
 
@@ -41,7 +46,6 @@ function field(label, name, type = 'text', options = [], required = true, placeh
 function renderDynamic() {
   const s = serviceInput.value;
   let html = `<h2>${s || 'Detalles del servicio'}</h2>`;
-
   if (s === 'Reparación / Diagnóstico') {
     html += field('¿El equipo enciende?', 'turns_on', 'select', ['Sí', 'No']);
     html += field('¿El equipo está enfriando?', 'cooling', 'select', ['Sí', 'Enfría poco', 'No enfría']);
@@ -77,7 +81,6 @@ function validateStep() {
   const active = steps[current];
   active.querySelectorAll('.error').forEach(e => e.remove());
   const required = [...active.querySelectorAll('[required]')];
-
   for (const el of required) {
     const empty = el.type === 'checkbox' ? !el.checked : !String(el.value).trim();
     if (empty) {
@@ -85,7 +88,6 @@ function validateStep() {
       return false;
     }
   }
-
   if (current === 0) {
     const phone = form.elements.phone.value.replace(/\D/g, '');
     if (phone.length < 10) {
@@ -93,7 +95,6 @@ function validateStep() {
       return false;
     }
   }
-
   if (current === 1 && !serviceInput.value) {
     const err = document.createElement('div');
     err.className = 'error';
@@ -101,7 +102,6 @@ function validateStep() {
     document.getElementById('serviceChoices').after(err);
     return false;
   }
-
   if (current === 3 && serviceInput.value === 'Mantenimiento preventivo') {
     const working = form.elements.working;
     if (working?.value === 'No') {
@@ -109,7 +109,6 @@ function validateStep() {
       return false;
     }
   }
-
   return true;
 }
 
@@ -170,45 +169,74 @@ function setLocked(el, locked, labelLocked, labelOpen) {
   el.textContent = locked ? labelLocked : labelOpen;
 }
 
+function buildFinalConfirmationLink() {
+  const d = completionData;
+  const lines = ['*SOLICITUD DE CONFIRMACIÓN DE CITA - OASIS*', ''];
+  lines.push(`*Cliente:* ${d.name || ''}`);
+  lines.push(`*Teléfono:* ${d.phone || ''}`);
+  lines.push(`*Servicio:* ${d.service || ''}`);
+  lines.push(`*Pueblo:* ${d.town || ''}`);
+  lines.push('');
+  if (isNewClient) {
+    lines.push('✅ Ya envié mi información.');
+    lines.push('✅ Ya seleccioné mi cita en el calendario.');
+    lines.push('✅ Ya realicé el depósito de $25 por ATH Móvil.');
+  } else {
+    lines.push('✅ Ya envié mi información.');
+    lines.push('✅ Ya seleccioné mi cita en el calendario.');
+    lines.push('ℹ️ Soy cliente existente; no requiere depósito inicial.');
+  }
+  lines.push('', 'Deseo solicitar la confirmación final de mi cita.');
+  finalConfirmBtn.href = `https://wa.me/17876643079?text=${encodeURIComponent(lines.join('\n'))}`;
+}
+
+function unlockFinalConfirmation() {
+  confirmStep.classList.add('active');
+  setLocked(finalConfirmBtn, false, '🔒 Confirmar mi cita por WhatsApp', `${isNewClient ? '4' : '3'}. Confirmar mi cita por WhatsApp`);
+  buildFinalConfirmationLink();
+  finalNote.textContent = 'Último paso: envía el mensaje de confirmación a Oasis. La cita queda pendiente hasta que Oasis la valide.';
+}
+
 function resetCompletionFlow() {
   whatsappOpened = false;
   calendarOpened = false;
+  depositOpened = false;
   waStep.classList.add('active');
   waStep.classList.remove('done-step');
   calendarStep.classList.remove('active', 'done-step');
   depositStep.classList.remove('active', 'done-step');
+  confirmStep.classList.remove('active', 'done-step');
   setLocked(calendarBtn, true, '🔒 2. Ver fechas y agendar', '2. Ver fechas y agendar');
   setLocked(depositBtn, true, '🔒 3. Pagar depósito $25', '3. Pagar depósito $25');
+  setLocked(finalConfirmBtn, true, '🔒 Confirmar mi cita por WhatsApp', 'Confirmar mi cita por WhatsApp');
+  finalConfirmBtn.href = '#';
 }
 
 form.addEventListener('submit', e => {
   e.preventDefault();
   if (!validateStep()) return;
-
   const d = dataObject();
+  completionData = d;
   isNewClient = d.existing === 'No';
   const lines = ['*NUEVA SOLICITUD DE SERVICIO - OASIS*', ''];
   Object.entries(d)
     .filter(([k, v]) => v && k !== 'confirm')
     .forEach(([k, v]) => lines.push(`*${labelize(k)}:* ${v}`));
-
   if (isNewClient) {
     lines.push('', '⚠️ Cliente nuevo: luego de seleccionar una fecha disponible aplica depósito de $25 para reservar la primera cita.');
   }
   lines.push('', 'Solicitud completada desde el cuestionario de Oasis.');
-
   sendWhatsapp.href = `https://wa.me/17876643079?text=${encodeURIComponent(lines.join('\n'))}`;
   resetCompletionFlow();
   depositStep.hidden = !isNewClient;
   depositBtn.hidden = !isNewClient;
-
+  confirmStepNumber.textContent = isNewClient ? '4' : '3';
   flowMessage.textContent = isNewClient
-    ? 'Primero envía la información. Luego revisa las fechas disponibles y, si escoges una, realiza el depósito de $25.'
-    : 'Primero envía la información. Luego revisa las fechas disponibles y agenda tu cita.';
+    ? 'Envía tu información, selecciona una cita, realiza el depósito y luego solicita la confirmación final por WhatsApp.'
+    : 'Envía tu información, selecciona una cita y luego solicita la confirmación final por WhatsApp.';
   finalNote.textContent = isNewClient
-    ? 'El depósito se habilita después de abrir el calendario para que puedas verificar primero si las fechas disponibles te funcionan.'
-    : 'Los clientes existentes no requieren depósito para continuar con la agenda.';
-
+    ? 'El depósito se habilita después de abrir el calendario. La confirmación final se habilita después del depósito.'
+    : 'Como cliente existente no necesitas depósito. La confirmación final se habilita después de abrir el calendario.';
   document.getElementById('formCard').hidden = true;
   document.getElementById('doneCard').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -230,12 +258,11 @@ calendarBtn.addEventListener('click', e => {
   calendarOpened = true;
   calendarStep.classList.remove('active');
   calendarStep.classList.add('done-step');
-
   if (isNewClient) {
     depositStep.classList.add('active');
     setLocked(depositBtn, false, '🔒 3. Pagar depósito $25', '3. Pagar depósito $25');
   } else {
-    finalNote.textContent = 'Listo. Como cliente existente, no se requiere depósito.';
+    unlockFinalConfirmation();
   }
 });
 
@@ -244,8 +271,20 @@ depositBtn.addEventListener('click', e => {
     e.preventDefault();
     return;
   }
+  depositOpened = true;
   depositStep.classList.remove('active');
   depositStep.classList.add('done-step');
+  unlockFinalConfirmation();
+});
+
+finalConfirmBtn.addEventListener('click', e => {
+  if (finalConfirmBtn.classList.contains('locked')) {
+    e.preventDefault();
+    return;
+  }
+  confirmStep.classList.remove('active');
+  confirmStep.classList.add('done-step');
+  finalNote.textContent = 'Solicitud de confirmación enviada. Oasis verificará la cita y el depósito cuando aplique.';
 });
 
 document.getElementById('restartBtn').addEventListener('click', () => {
@@ -257,9 +296,11 @@ document.getElementById('restartBtn').addEventListener('click', () => {
   depositNotice.hidden = true;
   current = 0;
   isNewClient = false;
+  completionData = {};
   resetCompletionFlow();
   depositStep.hidden = true;
   depositBtn.hidden = true;
+  confirmStepNumber.textContent = '3';
   updateUI();
   document.getElementById('doneCard').hidden = true;
   document.getElementById('formCard').hidden = false;
