@@ -28,7 +28,7 @@
 
       <div class="intro">
         <strong>Solicita tu servicio en pocos pasos.</strong>
-        <span>Completa la información, envíala por WhatsApp y luego revisa las fechas disponibles.</span>
+        <span>Completa la información, envíala por WhatsApp y luego sigue los pasos para reservar tu cita.</span>
       </div>
 
       <div class="progress-wrap" aria-label="Progreso del formulario">
@@ -136,23 +136,25 @@
     <section class="card done" id="doneCard" hidden>
       <img class="done-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" />
       <div class="success">✓</div>
-      <h2>Solicitud lista</h2>
+      <h2>Completa tu reserva</h2>
       <p id="flowMessage">Sigue los pasos en orden para completar tu solicitud.</p>
 
       <div class="flow-steps" aria-label="Pasos para completar la solicitud">
-        <div class="flow-step active" id="waStep"><span>1</span><div><strong>Enviar información</strong><small>Envía el resumen a Oasis por WhatsApp.</small></div></div>
-        <div class="flow-step" id="calendarStep"><span>2</span><div><strong>Ver fechas y agendar</strong><small>Revisa primero si los horarios disponibles te funcionan.</small></div></div>
+        <div class="flow-step active" id="waStep"><span>1</span><div><strong>Enviar información</strong><small>Envía el resumen de tu solicitud a Oasis por WhatsApp.</small></div></div>
+        <div class="flow-step" id="calendarStep"><span>2</span><div><strong>Ver fechas y agendar</strong><small>Revisa los horarios y selecciona la cita que te funcione.</small></div></div>
         <div class="flow-step" id="depositStep" hidden><span>3</span><div><strong>Depósito de $25</strong><small>Solo para clientes nuevos, después de seleccionar la cita.</small></div></div>
+        <div class="flow-step" id="confirmStep"><span id="confirmStepNumber">3</span><div><strong>Confirmar con Oasis</strong><small>Envía el mensaje final para solicitar la confirmación de tu cita.</small></div></div>
       </div>
 
       <div class="done-actions">
         <a id="sendWhatsapp" class="btn whatsapp" href="#" target="_blank" rel="noopener">1. Enviar información por WhatsApp</a>
         <a id="calendarBtn" class="btn primary locked" href="https://confirmafy.com/oasis-services-pr/cmer2orv0gxehp50f81ja0gy5" target="_blank" rel="noopener" aria-disabled="true">🔒 2. Ver fechas y agendar</a>
         <a id="depositBtn" class="btn ath locked" href="https://pagos.athmovilapp.com/pagoPorCodigo.html?id=0a6458db-be6e-4c13-93a5-d4b858167f97" target="_blank" rel="noopener" aria-disabled="true" hidden>🔒 3. Pagar depósito $25</a>
+        <a id="finalConfirmBtn" class="btn confirm-btn locked" href="#" target="_blank" rel="noopener" aria-disabled="true">🔒 Confirmar mi cita por WhatsApp</a>
         <button type="button" id="restartBtn" class="btn secondary">Nueva solicitud</button>
       </div>
 
-      <div class="final-note" id="finalNote">La agenda se habilita después de abrir WhatsApp. Para clientes nuevos, el depósito se habilita después de abrir el calendario.</div>
+      <div class="final-note" id="finalNote">Complete cada paso en orden. La cita queda pendiente de confirmación final por Oasis.</div>
       <small class="fineprint">Oasis Air Cleaner Services LLC · 787-664-3079</small>
     </section>
   </main>
