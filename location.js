@@ -11,6 +11,9 @@
 
   if (!gpsBtn || !manualBtn || !addressValue) return;
 
+  const GPS_LABEL = '📍 Usar mi ubicación actual';
+  const MANUAL_LABEL = '✍️ Escribir dirección';
+
   function clearErrors() {
     document.querySelectorAll('#locationBox .error').forEach(el => el.remove());
   }
@@ -24,15 +27,27 @@
   }
 
   function setSelected(mode) {
-    gpsBtn.classList.toggle('selected-location', mode === 'gps');
-    manualBtn.classList.toggle('selected-location', mode === 'manual');
+    const gpsSelected = mode === 'gps';
+    const manualSelected = mode === 'manual';
+
+    gpsBtn.classList.toggle('selected-location', gpsSelected);
+    manualBtn.classList.toggle('selected-location', manualSelected);
+    gpsBtn.textContent = gpsSelected ? `✓ ${GPS_LABEL}` : GPS_LABEL;
+    manualBtn.textContent = manualSelected ? `✓ ${MANUAL_LABEL}` : MANUAL_LABEL;
+  }
+
+  function clearSelected() {
+    gpsBtn.classList.remove('selected-location');
+    manualBtn.classList.remove('selected-location');
+    gpsBtn.textContent = GPS_LABEL;
+    manualBtn.textContent = MANUAL_LABEL;
   }
 
   gpsBtn.addEventListener('click', () => {
     clearErrors();
     manualFields.hidden = true;
     addressValue.value = '';
-    setSelected('gps');
+    clearSelected();
 
     if (!navigator.geolocation) {
       addLocationError('Este dispositivo no permite obtener la ubicación. Use “Escribir dirección”.');
@@ -45,10 +60,12 @@
         const lng = position.coords.longitude.toFixed(6);
         const mapLink = `https://maps.google.com/?q=${lat},${lng}`;
         addressValue.value = `GPS: ${mapLink}`;
+        setSelected('gps');
         clearErrors();
       },
       () => {
         addressValue.value = '';
+        clearSelected();
         addLocationError('No pudimos obtener su ubicación. Active el permiso de ubicación o escriba la dirección manualmente.');
       },
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
@@ -86,11 +103,15 @@
     }
 
     addressValue.value = `${streetValue}, ${communityValue}, ${townValue}, Puerto Rico`;
+    setSelected('manual');
     clearErrors();
   });
 
   [street, community, town].forEach(el => el?.addEventListener('input', () => {
-    if (!manualFields.hidden) addressValue.value = '';
+    if (!manualFields.hidden) {
+      addressValue.value = '';
+      setSelected('manual');
+    }
   }));
 
   nextBtn?.addEventListener('click', event => {
