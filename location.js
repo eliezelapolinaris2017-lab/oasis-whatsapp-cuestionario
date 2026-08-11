@@ -1,7 +1,6 @@
 (() => {
   const gpsBtn = document.getElementById('gpsBtn');
   const manualBtn = document.getElementById('manualAddressBtn');
-  const saveManualBtn = document.getElementById('saveManualAddress');
   const manualFields = document.getElementById('manualAddressFields');
   const addressValue = document.getElementById('addressValue');
   const street = document.getElementById('streetAddress');
@@ -29,7 +28,6 @@
   function setSelected(mode) {
     const gpsSelected = mode === 'gps';
     const manualSelected = mode === 'manual';
-
     gpsBtn.classList.toggle('selected-location', gpsSelected);
     manualBtn.classList.toggle('selected-location', manualSelected);
     gpsBtn.textContent = gpsSelected ? `✓ ${GPS_LABEL}` : GPS_LABEL;
@@ -43,23 +41,34 @@
     manualBtn.textContent = MANUAL_LABEL;
   }
 
+  function syncManualAddress() {
+    if (manualFields.hidden) return false;
+    const streetValue = street?.value.trim() || '';
+    const communityValue = community?.value.trim() || '';
+    const townValue = town?.value?.trim() || '';
+    if (townValue && streetValue.length >= 5 && communityValue.length >= 3) {
+      addressValue.value = `${streetValue}, ${communityValue}, ${townValue}, Puerto Rico`;
+      setSelected('manual');
+      return true;
+    }
+    addressValue.value = '';
+    return false;
+  }
+
   gpsBtn.addEventListener('click', () => {
     clearErrors();
     manualFields.hidden = true;
     addressValue.value = '';
     clearSelected();
-
     if (!navigator.geolocation) {
       addLocationError('Este dispositivo no permite obtener la ubicación. Use “Escribir dirección”.');
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       position => {
         const lat = position.coords.latitude.toFixed(6);
         const lng = position.coords.longitude.toFixed(6);
-        const mapLink = `https://maps.google.com/?q=${lat},${lng}`;
-        addressValue.value = `GPS: ${mapLink}`;
+        addressValue.value = `GPS: https://maps.google.com/?q=${lat},${lng}`;
         setSelected('gps');
         clearErrors();
       },
@@ -74,52 +83,34 @@
 
   manualBtn.addEventListener('click', () => {
     clearErrors();
-    setSelected('manual');
     manualFields.hidden = false;
     addressValue.value = '';
+    setSelected('manual');
     setTimeout(() => street?.focus(), 50);
   });
 
-  saveManualBtn.addEventListener('click', () => {
-    clearErrors();
-    const streetValue = street.value.trim();
-    const communityValue = community.value.trim();
-    const townValue = town?.value?.trim() || '';
-
-    if (!townValue) {
-      addLocationError('Primero seleccione el pueblo.');
-      town?.focus();
-      return;
-    }
-    if (streetValue.length < 5) {
-      addLocationError('Escriba una calle, carretera y/o número válido.');
-      street.focus();
-      return;
-    }
-    if (communityValue.length < 3) {
-      addLocationError('Añada la urbanización, condominio o sector.');
-      community.focus();
-      return;
-    }
-
-    addressValue.value = `${streetValue}, ${communityValue}, ${townValue}, Puerto Rico`;
-    setSelected('manual');
-    clearErrors();
+  [street, community, town].forEach(el => {
+    el?.addEventListener('input', syncManualAddress);
+    el?.addEventListener('change', syncManualAddress);
   });
-
-  [street, community, town].forEach(el => el?.addEventListener('input', () => {
-    if (!manualFields.hidden) {
-      addressValue.value = '';
-      setSelected('manual');
-    }
-  }));
 
   nextBtn?.addEventListener('click', event => {
     const firstStepActive = document.querySelector('.step[data-step="1"]')?.classList.contains('active');
-    if (firstStepActive && !addressValue.value.trim()) {
+    if (!firstStepActive) return;
+    clearErrors();
+    if (!manualFields.hidden && !syncManualAddress()) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      addLocationError('Seleccione “Usar mi ubicación actual” o registre una dirección manual antes de continuar.');
+      if (!town?.value?.trim()) addLocationError('Primero seleccione el pueblo.');
+      else if ((street?.value.trim() || '').length < 5) addLocationError('Escriba una calle, carretera y/o número válido.');
+      else addLocationError('Añada la urbanización, condominio o sector.');
+      document.getElementById('locationBox')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (!addressValue.value.trim()) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      addLocationError('Seleccione “Usar mi ubicación actual” o “Escribir dirección” antes de continuar.');
       document.getElementById('locationBox')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   });
