@@ -8,6 +8,7 @@
   const street = document.getElementById('streetAddress');
   const community = document.getElementById('communityAddress');
   const town = document.querySelector('[name="town"]');
+  const nextBtn = document.getElementById('nextBtn');
 
   if (!gpsBtn || !manualBtn || !addressValue) return;
 
@@ -95,4 +96,14 @@
       if (!status.hidden) showStatus('Si modifica la dirección, pulse nuevamente “Usar esta dirección”.', 'loading');
     }
   }));
+
+  nextBtn?.addEventListener('click', event => {
+    const firstStepActive = document.querySelector('.step[data-step="1"]')?.classList.contains('active');
+    if (firstStepActive && !addressValue.value.trim()) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      showStatus('Seleccione “Usar mi ubicación actual” o registre una dirección manual antes de continuar.', 'error-state');
+      document.getElementById('locationBox')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
 })();
