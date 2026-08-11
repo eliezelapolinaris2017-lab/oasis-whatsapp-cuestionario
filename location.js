@@ -4,7 +4,6 @@
   const saveManualBtn = document.getElementById('saveManualAddress');
   const manualFields = document.getElementById('manualAddressFields');
   const addressValue = document.getElementById('addressValue');
-  const status = document.getElementById('locationStatus');
   const street = document.getElementById('streetAddress');
   const community = document.getElementById('communityAddress');
   const town = document.querySelector('[name="town"]');
@@ -16,10 +15,12 @@
     document.querySelectorAll('#locationBox .error').forEach(el => el.remove());
   }
 
-  function showStatus(message, type = 'success') {
-    status.hidden = false;
-    status.className = `location-status ${type}`;
-    status.textContent = message;
+  function addLocationError(message) {
+    clearErrors();
+    const err = document.createElement('div');
+    err.className = 'error';
+    err.textContent = message;
+    document.getElementById('locationBox')?.appendChild(err);
   }
 
   function setSelected(mode) {
@@ -32,10 +33,9 @@
     manualFields.hidden = true;
     addressValue.value = '';
     setSelected('gps');
-    showStatus('Solicitando permiso de ubicación…', 'loading');
 
     if (!navigator.geolocation) {
-      showStatus('Este dispositivo no permite obtener la ubicación. Use “Escribir dirección”.', 'error-state');
+      addLocationError('Este dispositivo no permite obtener la ubicación. Use “Escribir dirección”.');
       return;
     }
 
@@ -45,11 +45,11 @@
         const lng = position.coords.longitude.toFixed(6);
         const mapLink = `https://maps.google.com/?q=${lat},${lng}`;
         addressValue.value = `GPS: ${mapLink}`;
-        showStatus('✅ Ubicación registrada correctamente. Oasis recibirá un enlace directo al mapa.', 'success');
+        clearErrors();
       },
       () => {
         addressValue.value = '';
-        showStatus('No pudimos obtener su ubicación. Active el permiso de ubicación o escriba la dirección manualmente.', 'error-state');
+        addLocationError('No pudimos obtener su ubicación. Active el permiso de ubicación o escriba la dirección manualmente.');
       },
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
     );
@@ -60,7 +60,6 @@
     setSelected('manual');
     manualFields.hidden = false;
     addressValue.value = '';
-    showStatus('Escriba la dirección completa y luego pulse “Usar esta dirección”.', 'loading');
     setTimeout(() => street?.focus(), 50);
   });
 
@@ -71,30 +70,27 @@
     const townValue = town?.value?.trim() || '';
 
     if (!townValue) {
-      showStatus('Primero seleccione el pueblo.', 'error-state');
+      addLocationError('Primero seleccione el pueblo.');
       town?.focus();
       return;
     }
     if (streetValue.length < 5) {
-      showStatus('Escriba una calle, carretera y/o número válido.', 'error-state');
+      addLocationError('Escriba una calle, carretera y/o número válido.');
       street.focus();
       return;
     }
     if (communityValue.length < 3) {
-      showStatus('Añada la urbanización, condominio o sector.', 'error-state');
+      addLocationError('Añada la urbanización, condominio o sector.');
       community.focus();
       return;
     }
 
     addressValue.value = `${streetValue}, ${communityValue}, ${townValue}, Puerto Rico`;
-    showStatus('✅ Dirección registrada correctamente.', 'success');
+    clearErrors();
   });
 
   [street, community, town].forEach(el => el?.addEventListener('input', () => {
-    if (!manualFields.hidden) {
-      addressValue.value = '';
-      if (!status.hidden) showStatus('Si modifica la dirección, pulse nuevamente “Usar esta dirección”.', 'loading');
-    }
+    if (!manualFields.hidden) addressValue.value = '';
   }));
 
   nextBtn?.addEventListener('click', event => {
@@ -102,7 +98,7 @@
     if (firstStepActive && !addressValue.value.trim()) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      showStatus('Seleccione “Usar mi ubicación actual” o registre una dirección manual antes de continuar.', 'error-state');
+      addLocationError('Seleccione “Usar mi ubicación actual” o registre una dirección manual antes de continuar.');
       document.getElementById('locationBox')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   });
