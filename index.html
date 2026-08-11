@@ -35,14 +35,12 @@
               <button type="button" class="btn location-primary" id="gpsBtn">📍 Usar mi ubicación actual</button>
               <button type="button" class="btn location-secondary" id="manualAddressBtn">✍️ Escribir dirección</button>
             </div>
-            <input type="hidden" name="location_mode" id="locationMode" />
-            <input type="hidden" name="latitude" id="latitude" />
-            <input type="hidden" name="longitude" id="longitude" />
-            <input type="hidden" name="map_url" id="mapUrl" />
+            <input type="hidden" name="address" id="addressValue" required />
             <div class="location-status" id="locationStatus" hidden></div>
             <div id="manualAddressFields" class="manual-address" hidden>
-              <label>Calle / carretera y número<input type="text" name="street_address" autocomplete="street-address" placeholder="Ej. Carr. 845 Km 3.2 / Calle 8 #123" /></label>
-              <label>Urbanización, condominio o sector<input type="text" name="community" placeholder="Ej. Urb. Jardines de Trujillo Alto" /></label>
+              <label>Calle / carretera y número<input type="text" id="streetAddress" autocomplete="street-address" placeholder="Ej. Carr. 845 Km 3.2 / Calle 8 #123" /></label>
+              <label>Urbanización, condominio o sector<input type="text" id="communityAddress" placeholder="Ej. Urb. Jardines de Trujillo Alto" /></label>
+              <button type="button" class="btn location-save" id="saveManualAddress">✓ Usar esta dirección</button>
             </div>
           </div>
 
@@ -59,5 +57,5 @@
       <div class="trust-row"><span>🔒 Datos usados únicamente para coordinar su servicio.</span><span>📞 787-664-3079</span></div>
     </section>
     <section class="card done" id="doneCard" hidden><img class="done-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" /><div class="success">✓</div><h2>Proceso de reserva</h2><p id="flowMessage">Sigue los pasos en orden. Ningún paso posterior se habilita antes de tiempo.</p><div class="flow-steps" aria-label="Pasos para completar la solicitud"><div class="flow-step active" id="waStep"><span>1</span><div><strong>Enviar información</strong><small>Envía el resumen de tu solicitud a Oasis por WhatsApp.</small></div></div><div class="flow-step" id="calendarStep"><span>2</span><div><strong>Ver fechas y agendar</strong><small>Revisa los horarios y selecciona la cita que te funcione.</small></div></div><div class="flow-step" id="depositStep" hidden><span>3</span><div><strong>Depósito de $25</strong><small>Solo para clientes nuevos, después de seleccionar la cita.</small></div></div><div class="flow-step" id="confirmStep"><span id="confirmStepNumber">3</span><div><strong>Confirmar con Oasis</strong><small>Envía el mensaje final para solicitar la confirmación de tu cita.</small></div></div></div><div class="done-actions"><a id="sendWhatsapp" class="btn whatsapp" href="#" target="_blank" rel="noopener">1. Enviar información por WhatsApp</a><a id="calendarBtn" class="btn primary locked" href="https://confirmafy.com/oasis-services-pr/cmer2orv0gxehp50f81ja0gy5" target="_blank" rel="noopener" aria-disabled="true">🔒 2. Ver fechas y agendar</a><a id="depositBtn" class="btn ath locked" href="https://pagos.athmovilapp.com/pagoPorCodigo.html?id=0a6458db-be6e-4c13-93a5-d4b858167f97" target="_blank" rel="noopener" aria-disabled="true" hidden>🔒 3. Pagar depósito $25</a><a id="finalConfirmBtn" class="btn confirm-btn locked" href="#" target="_blank" rel="noopener" aria-disabled="true">🔒 Confirmar mi cita por WhatsApp</a><button type="button" id="restartBtn" class="btn secondary">Nueva solicitud</button></div><div class="final-note" id="finalNote">Complete cada paso en orden. La cita queda pendiente de confirmación final por Oasis.</div><small class="fineprint">Oasis Air Cleaner Services LLC · 787-664-3079</small></section>
-  </main><script src="app.js"></script>
+  </main><script src="location.js"></script><script src="app.js"></script>
 </body></html>
