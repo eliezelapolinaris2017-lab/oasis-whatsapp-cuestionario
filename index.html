@@ -28,7 +28,24 @@
           <label>Nombre y apellido<input type="text" name="name" required autocomplete="name" placeholder="Ej. Juan Pérez" /></label>
           <label>Número de teléfono<input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="787-000-0000" /></label>
           <label>Pueblo<select name="town" required><option value="">Seleccione</option><option>Trujillo Alto</option><option>San Juan</option><option>Carolina</option><option>Guaynabo</option><option>Bayamón</option><option>Cataño</option><option>Toa Baja</option><option>Otro pueblo</option></select></label>
-          <label>Dirección / urbanización<input type="text" name="address" required autocomplete="street-address" placeholder="Urbanización, calle o condominio" /></label>
+
+          <div class="location-box" id="locationBox">
+            <div class="location-heading"><strong>📍 Ubicación del servicio</strong><small>Necesitamos una ubicación precisa para llegar sin contratiempos.</small></div>
+            <div class="location-actions">
+              <button type="button" class="btn location-primary" id="gpsBtn">📍 Usar mi ubicación actual</button>
+              <button type="button" class="btn location-secondary" id="manualAddressBtn">✍️ Escribir dirección</button>
+            </div>
+            <input type="hidden" name="location_mode" id="locationMode" />
+            <input type="hidden" name="latitude" id="latitude" />
+            <input type="hidden" name="longitude" id="longitude" />
+            <input type="hidden" name="map_url" id="mapUrl" />
+            <div class="location-status" id="locationStatus" hidden></div>
+            <div id="manualAddressFields" class="manual-address" hidden>
+              <label>Calle / carretera y número<input type="text" name="street_address" autocomplete="street-address" placeholder="Ej. Carr. 845 Km 3.2 / Calle 8 #123" /></label>
+              <label>Urbanización, condominio o sector<input type="text" name="community" placeholder="Ej. Urb. Jardines de Trujillo Alto" /></label>
+            </div>
+          </div>
+
           <label>Apartamento, acceso o referencia <span class="optional">(opcional)</span><input type="text" name="access" placeholder="Ej. Apt. 7, portón, edificio, referencia" /></label>
           <label>Tipo de propiedad<select name="property" required><option value="">Seleccione</option><option>Casa</option><option>Apartamento</option><option>Condominio</option><option>Oficina</option><option>Comercio</option><option>Otro</option></select></label>
           <label>¿Ya es cliente de Oasis?<select name="existing" required><option value="">Seleccione</option><option value="Sí">Sí</option><option value="No">No, sería mi primera visita</option></select></label>
