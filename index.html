@@ -12,9 +12,7 @@
   <link rel="canonical" href="https://oasis-cuestionario.oasisservicepr.com/" />
   <link rel="icon" href="logo.svg" type="image/svg+xml" />
   <title>Solicitar servicio | Oasis</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="map.css" />
 </head>
 <body>
   <main class="app-shell">
@@ -30,30 +28,7 @@
           <label>Nombre y apellido<input type="text" name="name" required autocomplete="name" placeholder="Ej. Juan Pérez" /></label>
           <label>Número de teléfono<input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="787-000-0000" /></label>
           <label>Pueblo<select name="town" required><option value="">Seleccione</option><option>Trujillo Alto</option><option>San Juan</option><option>Carolina</option><option>Guaynabo</option><option>Bayamón</option><option>Cataño</option><option>Toa Baja</option><option>Otro pueblo</option></select></label>
-
-          <div class="location-box" id="locationBox">
-            <div class="location-heading"><strong>📍 Ubicación del servicio</strong><small>Seleccione la propiedad exacta en el mapa o escriba la dirección.</small></div>
-            <div class="location-actions">
-              <button type="button" class="btn location-primary" id="mapBtn">📍 Buscar ubicación en el mapa</button>
-              <button type="button" class="btn location-secondary" id="manualAddressBtn">✍️ Escribir dirección</button>
-            </div>
-            <input type="hidden" name="address" id="addressValue" required />
-
-            <div id="mapFields" class="map-fields" hidden>
-              <div class="map-search-row">
-                <input type="search" id="mapSearch" placeholder="Buscar dirección, urbanización o lugar" autocomplete="off" />
-                <button type="button" class="btn map-search-btn" id="mapSearchBtn">Buscar</button>
-              </div>
-              <div id="serviceMap" class="service-map" aria-label="Mapa para seleccionar la ubicación del servicio"></div>
-              <small class="map-help">Busque la propiedad o toque el mapa para mover el pin al lugar exacto.</small>
-            </div>
-
-            <div id="manualAddressFields" class="manual-address" hidden>
-              <label>Calle / carretera y número<input type="text" id="streetAddress" autocomplete="street-address" placeholder="Ej. Carr. 845 Km 3.2 / Calle 8 #123" /></label>
-              <label>Urbanización, condominio o sector<input type="text" id="communityAddress" placeholder="Ej. Urb. Jardines de Trujillo Alto" /></label>
-            </div>
-          </div>
-
+          <label>Dirección completa<input type="text" name="address" required autocomplete="street-address" placeholder="Calle/carretera, número, urbanización o condominio" /></label>
           <label>Apartamento, acceso o referencia <span class="optional">(opcional)</span><input type="text" name="access" placeholder="Ej. Apt. 7, portón, edificio, referencia" /></label>
           <label>Tipo de propiedad<select name="property" required><option value="">Seleccione</option><option>Casa</option><option>Apartamento</option><option>Condominio</option><option>Oficina</option><option>Comercio</option><option>Otro</option></select></label>
           <label>¿Ya es cliente de Oasis?<select name="existing" required><option value="">Seleccione</option><option value="Sí">Sí</option><option value="No">No, sería mi primera visita</option></select></label>
@@ -66,9 +41,7 @@
       </form>
       <div class="trust-row"><span>🔒 Datos usados únicamente para coordinar su servicio.</span><span>📞 787-664-3079</span></div>
     </section>
-
     <section class="card done" id="doneCard" hidden><img class="done-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" /><div class="success">✓</div><h2>Proceso de reserva</h2><p id="flowMessage">Sigue los pasos en orden. Ningún paso posterior se habilita antes de tiempo.</p><div class="flow-steps" aria-label="Pasos para completar la solicitud"><div class="flow-step active" id="waStep"><span>1</span><div><strong>Enviar información</strong><small>Envía el resumen de tu solicitud a Oasis por WhatsApp.</small></div></div><div class="flow-step" id="calendarStep"><span>2</span><div><strong>Ver fechas y agendar</strong><small>Revisa los horarios y selecciona la cita que te funcione.</small></div></div><div class="flow-step" id="depositStep" hidden><span>3</span><div><strong>Depósito de $25</strong><small>Solo para clientes nuevos, después de seleccionar la cita.</small></div></div><div class="flow-step" id="confirmStep"><span id="confirmStepNumber">3</span><div><strong>Confirmar con Oasis</strong><small>Envía el mensaje final para solicitar la confirmación de tu cita.</small></div></div></div><div class="done-actions"><a id="sendWhatsapp" class="btn whatsapp" href="#" target="_blank" rel="noopener">1. Enviar información por WhatsApp</a><a id="calendarBtn" class="btn primary locked" href="https://confirmafy.com/oasis-services-pr/cmer2orv0gxehp50f81ja0gy5" target="_blank" rel="noopener" aria-disabled="true">🔒 2. Ver fechas y agendar</a><a id="depositBtn" class="btn ath locked" href="https://pagos.athmovilapp.com/pagoPorCodigo.html?id=0a6458db-be6e-4c13-93a5-d4b858167f97" target="_blank" rel="noopener" aria-disabled="true" hidden>🔒 3. Pagar depósito $25</a><a id="finalConfirmBtn" class="btn confirm-btn locked" href="#" target="_blank" rel="noopener" aria-disabled="true">🔒 Confirmar mi cita por WhatsApp</a><button type="button" id="restartBtn" class="btn secondary">Nueva solicitud</button></div><div class="final-note" id="finalNote">Complete cada paso en orden. La cita queda pendiente de confirmación final por Oasis.</div><small class="fineprint">Oasis Air Cleaner Services LLC · 787-664-3079</small></section>
   </main>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="location.js"></script><script src="app.js"></script>
+  <script src="app.js"></script>
 </body></html>
