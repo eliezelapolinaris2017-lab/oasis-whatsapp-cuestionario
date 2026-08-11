@@ -96,7 +96,6 @@
     clearErrors();
     const query = mapSearch?.value.trim() || '';
     if (query.length < 3) {
-      addLocationError('Escriba una dirección, urbanización o lugar para buscar.', mapFields);
       mapSearch?.focus();
       return;
     }
@@ -107,16 +106,13 @@
       const fullQuery = [query, townValue && townValue !== 'Otro pueblo' ? townValue : '', 'Puerto Rico'].filter(Boolean).join(', ');
       const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=pr&limit=5&q=${encodeURIComponent(fullQuery)}`;
       const response = await fetch(url, { headers: { Accept: 'application/json' } });
-      if (!response.ok) throw new Error('search failed');
+      if (!response.ok) return;
       const results = await response.json();
-      if (!Array.isArray(results) || !results.length) {
-        addLocationError('No encontramos esa ubicación. Intente otra búsqueda o toque el punto directamente en el mapa.', mapFields);
-        return;
-      }
+      if (!Array.isArray(results) || !results.length) return;
       const result = results[0];
       placeMarker(result.lat, result.lon, result.display_name || '');
     } catch (_) {
-      addLocationError('No se pudo completar la búsqueda. Puede tocar directamente la ubicación en el mapa o escribir la dirección.', mapFields);
+      // La búsqueda textual es una ayuda. El cliente siempre puede tocar el mapa directamente.
     } finally {
       mapSearchBtn.disabled = false;
       mapSearchBtn.textContent = 'Buscar';
@@ -191,7 +187,7 @@
       event.preventDefault();
       event.stopImmediatePropagation();
       addLocationError(selectedMode === 'map'
-        ? 'Seleccione un punto en el mapa antes de continuar.'
+        ? 'Toque en el mapa la ubicación exacta de la propiedad antes de continuar.'
         : 'Seleccione “Buscar ubicación en el mapa” o “Escribir dirección” antes de continuar.');
       document.getElementById('locationBox')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
