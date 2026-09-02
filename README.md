@@ -6,8 +6,8 @@ Mini-app lista para GitHub Pages. No requiere base de datos ni servidor.
 - Cuestionario móvil para clientes.
 - Preguntas condicionales según el servicio.
 - Resume la solicitud.
-- Botón para enviar el resumen por WhatsApp al 787-664-3079.
-- Botón final para abrir el calendario de Oasis.
+- Lectura obligatoria de la política de depósito para clientes nuevos.
+- Envío directo del cuestionario por WhatsApp al 787-664-3079.
 
 ## Publicar con GitHub Pages
 1. Crea un repositorio nuevo en GitHub, por ejemplo: `oasis-servicio`.
@@ -17,9 +17,6 @@ Mini-app lista para GitHub Pages. No requiere base de datos ni servidor.
 5. Selecciona `main` y carpeta `/root`, luego **Save**.
 6. GitHub te dará una dirección parecida a `https://TU-USUARIO.github.io/oasis-servicio/`.
 7. Usa ese enlace como botón/enlace de "Solicitar servicio" en WhatsApp Business, Instagram, web o respuestas rápidas.
-
-## Cambiar calendario
-Busca en `index.html` la URL de Confirmafy y reemplázala si cambia.
 
 ## Cambiar WhatsApp
 Busca en `app.js` esta parte: `17876643079` y reemplázala por el número en formato internacional, sin + ni guiones.
