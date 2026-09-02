@@ -7,7 +7,6 @@ const progressBar = document.getElementById('progressBar');
 const progressText = document.getElementById('progressText');
 const dynamic = document.getElementById('dynamicQuestions');
 const summary = document.getElementById('summary');
-const depositNotice = document.getElementById('depositNotice');
 const depositPolicyGate = document.getElementById('depositPolicyGate');
 const depositPolicyScroll = document.getElementById('depositPolicyScroll');
 const policyReadStatus = document.getElementById('policyReadStatus');
@@ -144,7 +143,6 @@ function labelize(k) {
 function buildSummary() {
   const d = dataObject();
   isNewClient = d.existing === 'No';
-  depositNotice.hidden = true;
   depositPolicyGate.hidden = !isNewClient;
   policyRead = !isNewClient;
   depositPolicyScroll.scrollTop = 0;
