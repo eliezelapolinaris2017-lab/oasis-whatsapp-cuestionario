@@ -11,10 +11,14 @@ const depositPolicyGate = document.getElementById('depositPolicyGate');
 const depositPolicyScroll = document.getElementById('depositPolicyScroll');
 const policyReadStatus = document.getElementById('policyReadStatus');
 const backBtnFinal = document.getElementById('backBtnFinal');
+const calendarBtn = document.getElementById('calendarBtn');
+const calendarCheckWrap = document.getElementById('calendarCheckWrap');
+const calendarConfirmedInput = document.getElementById('calendarConfirmed');
 
 let current = 0;
 let isNewClient = false;
 let policyRead = false;
+let calendarConfirmed = false;
 
 const serviceInput = form.elements.service;
 
@@ -143,7 +147,10 @@ function labelize(k) {
 function buildSummary() {
   const d = dataObject();
   isNewClient = d.existing === 'No';
-  depositPolicyGate.hidden = !isNewClient;
+  calendarConfirmed = false;
+  calendarConfirmedInput.checked = false;
+  calendarCheckWrap.hidden = true;
+  depositPolicyGate.hidden = true;
   policyRead = !isNewClient;
   depositPolicyScroll.scrollTop = 0;
   policyReadStatus.textContent = '↓ Deslice hasta el final para continuar.';
@@ -160,9 +167,27 @@ function escapeHtml(s) {
 }
 
 function updateSubmitAvailability() {
-  submitBtn.disabled = isNewClient && !policyRead;
+  submitBtn.disabled = !calendarConfirmed || (isNewClient && !policyRead);
   submitBtn.setAttribute('aria-disabled', submitBtn.disabled ? 'true' : 'false');
 }
+
+calendarBtn.addEventListener('click', () => {
+  calendarCheckWrap.hidden = false;
+});
+
+calendarConfirmedInput.addEventListener('change', () => {
+  calendarConfirmed = calendarConfirmedInput.checked;
+  if (isNewClient) {
+    depositPolicyGate.hidden = !calendarConfirmed;
+    if (!calendarConfirmed) {
+      policyRead = false;
+      depositPolicyScroll.scrollTop = 0;
+      policyReadStatus.textContent = '↓ Deslice hasta el final para continuar.';
+      policyReadStatus.classList.remove('read');
+    }
+  }
+  updateSubmitAvailability();
+});
 
 depositPolicyScroll.addEventListener('scroll', () => {
   if (!isNewClient || policyRead) return;
@@ -186,6 +211,12 @@ form.addEventListener('submit', e => {
   e.preventDefault();
   if (!validateStep()) return;
 
+  if (!calendarConfirmed) {
+    calendarCheckWrap.hidden = false;
+    addError(calendarConfirmedInput, 'Debe seleccionar y confirmar su fecha en Confirmafy antes de enviar.');
+    return;
+  }
+
   if (isNewClient && !policyRead) {
     policyReadStatus.textContent = 'Debe leer la política completa antes de enviar.';
     policyReadStatus.classList.remove('read');
@@ -198,6 +229,8 @@ form.addEventListener('submit', e => {
   Object.entries(d)
     .filter(([k, v]) => v && k !== 'confirm')
     .forEach(([k, v]) => lines.push(`*${labelize(k)}:* ${v}`));
+
+  lines.push('', '✅ Fecha seleccionada en el calendario de Confirmafy.');
 
   if (isNewClient) {
     lines.push('', '⚠️ *DEPÓSITO OBLIGATORIO PARA CLIENTES NUEVOS*');
