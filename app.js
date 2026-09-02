@@ -200,7 +200,16 @@ form.addEventListener('submit', e => {
     .forEach(([k, v]) => lines.push(`*${labelize(k)}:* ${v}`));
 
   if (isNewClient) {
-    lines.push('', '⚠️ Cliente nuevo: estoy informado de que el depósito de $25 es obligatorio y que, sin realizarlo, mi cita no podrá ser confirmada.');
+    lines.push('', '⚠️ *DEPÓSITO OBLIGATORIO PARA CLIENTES NUEVOS*');
+    lines.push('Para confirmar su cita debe realizar el depósito de $25 utilizando una de estas opciones:');
+    lines.push('');
+    lines.push('💳 *Pagar con tarjeta (Stripe):*');
+    lines.push('https://buy.stripe.com/dRm3cu9rUaT62fQ7tJ1RC0M');
+    lines.push('');
+    lines.push('📲 *Pagar con ATH Móvil:*');
+    lines.push('https://pagos.athmovilapp.com/pagoPorCodigo.html?id=0a6458db-be6e-4c13-93a5-d4b858167f97');
+    lines.push('');
+    lines.push('Sin realizar el depósito, su cita no podrá ser confirmada.');
   }
 
   lines.push('', 'Cuestionario completado y enviado a Oasis.');
