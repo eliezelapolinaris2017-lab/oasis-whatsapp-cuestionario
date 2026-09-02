@@ -6,6 +6,7 @@ Mini-app lista para GitHub Pages. No requiere base de datos ni servidor.
 - Cuestionario móvil para clientes.
 - Preguntas condicionales según el servicio.
 - Resume la solicitud.
+- Exige seleccionar una fecha en Confirmafy antes del envío.
 - Lectura obligatoria de la política de depósito para clientes nuevos.
 - Envío directo del cuestionario por WhatsApp al 787-664-3079.
 
