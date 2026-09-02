@@ -235,7 +235,7 @@ function renderFlowState() {
   confirmStepNumber.textContent = isNewClient ? '4' : '3';
 
   flowMessage.textContent = isNewClient
-    ? 'Sigue este orden: enviar información → agendar → depósito → confirmar con Oasis.'
+    ? 'Cliente nuevo: completa los pasos en orden. El depósito de $25 es obligatorio; sin realizarlo, tu cita no podrá ser confirmada.'
     : 'Sigue este orden: enviar información → agendar → confirmar con Oasis.';
 
   if (flowStage >= 1) {
@@ -279,7 +279,9 @@ function renderFlowState() {
   } else if (!isNewClient && flowStage >= 2) {
     finalNote.textContent = 'Como cliente existente no necesitas depósito. Ahora envía el mensaje final por WhatsApp.';
   } else {
-    finalNote.textContent = 'Complete cada paso en orden. La cita queda pendiente de confirmación final por Oasis.';
+    finalNote.textContent = isNewClient
+      ? 'El depósito de $25 es obligatorio para clientes nuevos. Si no lo realiza, su cita no podrá ser confirmada.'
+      : 'Complete cada paso en orden. La cita queda pendiente de confirmación final por Oasis.';
   }
 }
 
