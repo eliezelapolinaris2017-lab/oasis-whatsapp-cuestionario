@@ -3,7 +3,7 @@
 Mini-app lista para GitHub Pages. No requiere base de datos ni servidor.
 
 ## Qué hace
-- Cuestionario móvil para clientes.
+- Cuestionario móvil bilingüe (español e inglés) para clientes.\n- Cobertura seleccionable de 15 pueblos del área metropolitana y pueblos aledaños.
 - Preguntas condicionales según el servicio.
 - Resume la solicitud.
 - Exige seleccionar una fecha en Confirmafy antes del envío.
