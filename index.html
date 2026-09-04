@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0969da" />
-  <meta name="description" content="Cuestionario oficial para solicitar servicios de Oasis Air Cleaner Services LLC y agendar una cita." />
+  <meta name="description" content="Cuestionario oficial para solicitar servicios de Oasis Air Cleaner Services LLC." />
   <meta property="og:title" content="Solicitar servicio | Oasis Air Cleaner Services LLC" />
-  <meta property="og:description" content="Completa tu solicitud y agenda tu servicio con Oasis." />
+  <meta property="og:description" content="Complete your request and schedule your service with Oasis. Completa tu solicitud y agenda tu servicio con Oasis." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://oasis-cuestionario.oasisservicepr.com/" />
   <link rel="canonical" href="https://oasis-cuestionario.oasisservicepr.com/" />
@@ -16,32 +16,107 @@
 </head>
 <body>
   <main class="app-shell">
-    <section class="card" id="formCard">
+    <section class="card language-card" id="languageCard">
+      <img class="language-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" />
+      <span class="official-badge">Official Form · Formulario oficial</span>
+      <h1>Choose your language<br /><span>Seleccione su idioma</span></h1>
+      <p>Select a language to begin the service request.<br />Seleccione un idioma para comenzar la solicitud.</p>
+      <div class="language-actions">
+        <button type="button" class="btn language-btn" data-language="es">🇵🇷 Español</button>
+        <button type="button" class="btn language-btn" data-language="en">🇺🇸 English</button>
+      </div>
+    </section>
+
+    <section class="card" id="formCard" hidden>
       <header class="brand">
         <img class="brand-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" />
-        <div class="brand-copy"><span class="official-badge">Formulario oficial</span><h1>Solicitud de Servicio</h1><p>Oasis Air Cleaner Services LLC · Área Metropolitana</p></div>
+        <div class="brand-copy">
+          <span class="official-badge" data-i18n="officialBadge">Formulario oficial</span>
+          <h1 data-i18n="title">Solicitud de Servicio</h1>
+          <p data-i18n="coverage">Oasis Air Cleaner Services LLC · Área Metropolitana</p>
+        </div>
       </header>
-      <div class="intro"><strong>Solicita tu servicio en pocos pasos.</strong><span>Completa la información, revisa la política aplicable y envía el cuestionario por WhatsApp.</span></div>
-      <div class="progress-wrap" aria-label="Progreso del formulario"><div class="progress-bar"><span id="progressBar"></span></div><small id="progressText">Paso 1 de 5</small></div>
+      <button type="button" id="changeLanguageBtn" class="change-language" data-i18n="changeLanguage">Cambiar idioma</button>
+      <div class="intro"><strong data-i18n="introTitle">Solicita tu servicio en pocos pasos.</strong><span data-i18n="introText">Completa la información, selecciona una fecha y envía el cuestionario por WhatsApp.</span></div>
+      <div class="progress-wrap" id="progressWrap" aria-label="Progreso del formulario"><div class="progress-bar"><span id="progressBar"></span></div><small id="progressText">Paso 1 de 5</small></div>
+
       <form id="serviceForm" novalidate>
-        <section class="step active" data-step="1"><h2>Datos del cliente</h2>
-          <label>Nombre y apellido<input type="text" name="name" required autocomplete="name" placeholder="Ej. Juan Pérez" /></label>
-          <label>Número de teléfono<input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="787-000-0000" /></label>
-          <label>Pueblo<select name="town" required><option value="">Seleccione</option><option>Trujillo Alto</option><option>San Juan</option><option>Carolina</option><option>Guaynabo</option><option>Bayamón</option><option>Cataño</option><option>Toa Baja</option><option>Otro pueblo</option></select></label>
-          <label>Dirección completa<input type="text" name="address" required autocomplete="street-address" placeholder="Calle/carretera, número, urbanización o condominio" /></label>
-          <label>Si tiene su ubicación, puede pegar el enlace o las coordenadas aquí <span class="optional">(opcional)</span><input type="text" name="Ubicación / coordenadas" placeholder="Ej. enlace de Google Maps o 18.123456, -66.123456" /></label>
-          <label>Apartamento, acceso o referencia <span class="optional">(opcional)</span><input type="text" name="access" placeholder="Ej. Apt. 7, portón, edificio, referencia" /></label>
-          <label>Tipo de propiedad<select name="property" required><option value="">Seleccione</option><option>Casa</option><option>Apartamento</option><option>Condominio</option><option>Oficina</option><option>Comercio</option><option>Otro</option></select></label>
-          <label>¿Ya es cliente de Oasis?<select name="existing" required><option value="">Seleccione</option><option value="Sí">Sí</option><option value="No">No, sería mi primera visita</option></select></label>
+        <section class="step active" data-step="1">
+          <h2 data-i18n="clientData">Datos del cliente</h2>
+          <label><span data-i18n="fullName">Nombre y apellido</span><input type="text" name="name" required autocomplete="name" data-i18n-placeholder="fullNamePlaceholder" placeholder="Ej. Juan Pérez" /></label>
+          <label><span data-i18n="phone">Número de teléfono</span><input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="787-000-0000" /></label>
+          <label><span data-i18n="town">Pueblo</span><select name="town" required>
+            <option value="" data-i18n="select">Seleccione</option>
+            <option>Trujillo Alto</option><option>San Juan</option><option>Carolina</option><option>Guaynabo</option><option>Bayamón</option><option>Cataño</option><option>Toa Baja</option><option>Toa Alta</option><option>Dorado</option><option>Canóvanas</option><option>Loíza</option><option>Río Grande</option><option>Gurabo</option><option>Caguas</option><option>Juncos</option>
+          </select></label>
+          <label><span data-i18n="address">Dirección completa</span><input type="text" name="address" required autocomplete="street-address" data-i18n-placeholder="addressPlaceholder" placeholder="Calle/carretera, número, urbanización o condominio" /></label>
+          <label><span data-i18n="location">Enlace de ubicación o coordenadas</span> <span class="optional" data-i18n="optional">(opcional)</span><input type="text" name="location" data-i18n-placeholder="locationPlaceholder" placeholder="Ej. enlace de Google Maps o 18.123456, -66.123456" /></label>
+          <label><span data-i18n="access">Apartamento, acceso o referencia</span> <span class="optional" data-i18n="optional">(opcional)</span><input type="text" name="access" data-i18n-placeholder="accessPlaceholder" placeholder="Ej. Apt. 7, portón, edificio, referencia" /></label>
+          <label><span data-i18n="propertyType">Tipo de propiedad</span><select name="property" required>
+            <option value="" data-i18n="select">Seleccione</option><option value="house" data-i18n="house">Casa</option><option value="apartment" data-i18n="apartment">Apartamento</option><option value="condominium" data-i18n="condominium">Condominio</option><option value="office" data-i18n="office">Oficina</option><option value="business" data-i18n="business">Comercio</option><option value="other" data-i18n="other">Otro</option>
+          </select></label>
+          <label><span data-i18n="existingClient">¿Ya es cliente de Oasis?</span><select name="existing" required>
+            <option value="" data-i18n="select">Seleccione</option><option value="yes" data-i18n="yes">Sí</option><option value="no" data-i18n="firstVisit">No, sería mi primera visita</option>
+          </select></label>
         </section>
-        <section class="step" data-step="2"><h2>¿Qué servicio necesita?</h2><p class="section-help">Seleccione una opción.</p><div class="choice-grid" id="serviceChoices"><button type="button" class="choice" data-value="Mantenimiento preventivo"><span>🧼</span>Mantenimiento preventivo</button><button type="button" class="choice" data-value="Reparación / Diagnóstico"><span>🔧</span>Reparación / Diagnóstico</button><button type="button" class="choice" data-value="Instalación"><span>❄️</span>Instalación</button><button type="button" class="choice" data-value="Reubicación de equipo"><span>↔️</span>Reubicación</button><button type="button" class="choice" data-value="Cotización"><span>📝</span>Cotización</button><button type="button" class="choice" data-value="Otro"><span>＋</span>Otro</button></div><input type="hidden" name="service" required /></section>
-        <section class="step" data-step="3"><h2>Información del equipo</h2><label>Tipo de equipo<select name="equipment" required><option value="">Seleccione</option><option>Mini Split</option><option>Piso / Techo</option><option>Wall Pack</option><option>Unidad Central</option><option>Otro</option><option>No estoy seguro</option></select></label><label>Cantidad de unidades<input type="number" name="quantity" min="1" max="30" value="1" required inputmode="numeric" /></label><label>Capacidad aproximada<select name="btu" required><option value="">Seleccione</option><option>12,000 BTU</option><option>18,000 BTU</option><option>24,000 BTU</option><option>36,000 BTU</option><option>48,000 BTU</option><option>60,000 BTU</option><option>No sé</option></select></label></section>
+
+        <section class="step" data-step="2">
+          <h2 data-i18n="serviceQuestion">¿Qué servicio necesita?</h2><p class="section-help" data-i18n="chooseOption">Seleccione una opción.</p>
+          <div class="choice-grid" id="serviceChoices">
+            <button type="button" class="choice" data-value="maintenance"><span>🧼</span><b data-i18n="maintenance">Mantenimiento preventivo</b></button>
+            <button type="button" class="choice" data-value="repair"><span>🔧</span><b data-i18n="repair">Reparación / Diagnóstico</b></button>
+            <button type="button" class="choice" data-value="installation"><span>❄️</span><b data-i18n="installation">Instalación</b></button>
+            <button type="button" class="choice" data-value="relocation"><span>↔️</span><b data-i18n="relocation">Reubicación</b></button>
+            <button type="button" class="choice" data-value="estimate"><span>📝</span><b data-i18n="estimate">Cotización</b></button>
+            <button type="button" class="choice" data-value="other"><span>＋</span><b data-i18n="other">Otro</b></button>
+          </div>
+          <input type="hidden" name="service" required />
+        </section>
+
+        <section class="step" data-step="3">
+          <h2 data-i18n="equipmentInfo">Información del equipo</h2>
+          <label><span data-i18n="equipmentType">Tipo de equipo</span><select name="equipment" required>
+            <option value="" data-i18n="select">Seleccione</option><option value="miniSplit">Mini Split</option><option value="floorCeiling" data-i18n="floorCeiling">Piso / Techo</option><option value="wallPack">Wall Pack</option><option value="central" data-i18n="centralUnit">Unidad Central</option><option value="other" data-i18n="other">Otro</option><option value="unknown" data-i18n="notSure">No estoy seguro</option>
+          </select></label>
+          <label><span data-i18n="quantity">Cantidad de unidades</span><input type="number" name="quantity" min="1" max="30" value="1" required inputmode="numeric" /></label>
+          <label><span data-i18n="capacity">Capacidad aproximada</span><select name="btu" required>
+            <option value="" data-i18n="select">Seleccione</option><option>12,000 BTU</option><option>18,000 BTU</option><option>24,000 BTU</option><option>36,000 BTU</option><option>48,000 BTU</option><option>60,000 BTU</option><option value="unknown" data-i18n="dontKnow">No sé</option>
+          </select></label>
+        </section>
+
         <section class="step" data-step="4"><div id="dynamicQuestions"></div></section>
-        <section class="step" data-step="5"><h2>Revisa y completa tu solicitud</h2><div id="summary" class="summary"></div><div class="calendar-gate"><strong>1. Seleccione su fecha antes de enviar</strong><p>Abra el calendario de Confirmafy, elija una fecha disponible y luego regrese a este cuestionario.</p><a id="calendarBtn" class="btn primary" href="https://confirmafy.com/oasis-services-pr" target="_blank" rel="noopener">Abrir calendario y seleccionar fecha</a><label class="checkline calendar-check" id="calendarCheckWrap" hidden><input type="checkbox" id="calendarConfirmed" /><span>Confirmo que ya seleccioné mi fecha en Confirmafy.</span></label></div><div class="policy-gate" id="depositPolicyGate" hidden><strong>⚠️ 2. Lectura obligatoria para clientes nuevos</strong><p>Deslice dentro del recuadro hasta el final para habilitar el envío.</p><div class="policy-scroll" id="depositPolicyScroll" tabindex="0" aria-label="Política de depósito obligatorio"><p><strong>Depósito obligatorio de $25</strong></p><p>Todo cliente nuevo debe realizar un depósito de $25 después de seleccionar una fecha disponible.</p><p>El depósito es un requisito obligatorio para procesar y confirmar la primera cita.</p><p><strong>Si no realiza el depósito, su cita no podrá ser confirmada.</strong></p><p>El depósito se acredita al balance final del servicio. La cita queda sujeta a la verificación del pago por Oasis.</p><p class="policy-end">Fin de la política.</p></div><div class="policy-status" id="policyReadStatus">↓ Deslice hasta el final para continuar.</div></div><label class="checkline"><input type="checkbox" name="confirm" required /><span>Confirmo que la información suministrada es correcta.</span></label><div class="actions final-actions"><button type="button" id="backBtnFinal" class="btn secondary">Atrás</button><button type="submit" id="submitBtn" class="btn primary" disabled>Enviar cuestionario por WhatsApp</button></div></section>
-        <div class="actions" id="navigationActions"><button type="button" id="backBtn" class="btn secondary" hidden>Atrás</button><button type="button" id="nextBtn" class="btn primary">Continuar</button></div>
+
+        <section class="step" data-step="5">
+          <h2 data-i18n="reviewTitle">Revisa y completa tu solicitud</h2>
+          <div id="summary" class="summary"></div>
+          <div class="calendar-gate">
+            <strong data-i18n="calendarTitle">1. Seleccione su fecha antes de enviar</strong>
+            <p data-i18n="calendarText">Abra el calendario de Confirmafy, elija una fecha disponible y luego regrese a este cuestionario.</p>
+            <a id="calendarBtn" class="btn primary" href="https://confirmafy.com/oasis-services-pr" target="_blank" rel="noopener" data-i18n="calendarButton">Abrir calendario y seleccionar fecha</a>
+            <label class="checkline calendar-check" id="calendarCheckWrap" hidden><input type="checkbox" id="calendarConfirmed" /><span data-i18n="calendarConfirm">Confirmo que ya seleccioné mi fecha en Confirmafy.</span></label>
+          </div>
+          <div class="policy-gate" id="depositPolicyGate" hidden>
+            <strong data-i18n="policyTitle">⚠️ 2. Lectura obligatoria para clientes nuevos</strong>
+            <p data-i18n="policyInstruction">Deslice dentro del recuadro hasta el final para habilitar el envío.</p>
+            <div class="policy-scroll" id="depositPolicyScroll" tabindex="0" aria-label="Política de depósito obligatorio">
+              <p><strong data-i18n="depositTitle">Depósito obligatorio de $25</strong></p>
+              <p data-i18n="depositP1">Todo cliente nuevo debe realizar un depósito de $25 después de seleccionar una fecha disponible.</p>
+              <p data-i18n="depositP2">El depósito es un requisito obligatorio para procesar y confirmar la primera cita.</p>
+              <p><strong data-i18n="depositP3">Si no realiza el depósito, su cita no podrá ser confirmada.</strong></p>
+              <p data-i18n="depositP4">El depósito se acredita al balance final del servicio. La cita queda sujeta a la verificación del pago por Oasis.</p>
+              <p class="policy-end" data-i18n="policyEnd">Fin de la política.</p>
+            </div>
+            <div class="policy-status" id="policyReadStatus">↓ Deslice hasta el final para continuar.</div>
+          </div>
+          <label class="checkline"><input type="checkbox" name="confirm" required /><span data-i18n="confirmInfo">Confirmo que la información suministrada es correcta.</span></label>
+          <div class="actions final-actions"><button type="button" id="backBtnFinal" class="btn secondary" data-i18n="back">Atrás</button><button type="submit" id="submitBtn" class="btn primary" disabled data-i18n="sendWhatsApp">Enviar cuestionario por WhatsApp</button></div>
+        </section>
+
+        <div class="actions" id="navigationActions"><button type="button" id="backBtn" class="btn secondary" hidden data-i18n="back">Atrás</button><button type="button" id="nextBtn" class="btn primary" data-i18n="continue">Continuar</button></div>
       </form>
-      <div class="trust-row"><span>🔒 Datos usados únicamente para coordinar su servicio.</span><span>📞 787-664-3079</span></div>
+      <div class="trust-row"><span data-i18n="privacy">🔒 Datos usados únicamente para coordinar su servicio.</span><span>📞 787-664-3079</span></div>
     </section>
   </main>
   <script src="app.js"></script>
-</body></html>
+</body>
+</html>
