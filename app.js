@@ -15,14 +15,14 @@ const depositPolicyScroll = document.getElementById('depositPolicyScroll');
 const policyReadStatus = document.getElementById('policyReadStatus');
 const backBtnFinal = document.getElementById('backBtnFinal');
 const calendarBtn = document.getElementById('calendarBtn');
-const calendarCheckWrap = document.getElementById('calendarCheckWrap');
-const calendarConfirmedInput = document.getElementById('calendarConfirmed');
+const afterSendCard = document.getElementById('afterSendCard');
+const startOverBtn = document.getElementById('startOverBtn');
 const changeLanguageBtn = document.getElementById('changeLanguageBtn');
 
 const copy = {
   es: {
     officialBadge:'Formulario oficial', title:'Solicitud de Servicio', coverage:'Oasis Air Cleaner Services LLC · Área Metropolitana',
-    changeLanguage:'Cambiar idioma', introTitle:'Solicita tu servicio en pocos pasos.', introText:'Completa la información, selecciona una fecha y envía el cuestionario por WhatsApp.',
+    changeLanguage:'Cambiar idioma', introTitle:'Solicita tu servicio en pocos pasos.', introText:'Completa la información y envía primero el cuestionario por WhatsApp. Al regresar, podrás seleccionar la fecha.',
     clientData:'Datos del cliente', fullName:'Nombre y apellido', fullNamePlaceholder:'Ej. Juan Pérez', phone:'Número de teléfono', town:'Pueblo', select:'Seleccione',
     address:'Dirección completa', addressPlaceholder:'Calle/carretera, número, urbanización o condominio', location:'Enlace de ubicación o coordenadas',
     locationPlaceholder:'Ej. enlace de Google Maps o 18.123456, -66.123456', access:'Apartamento, acceso o referencia', accessPlaceholder:'Ej. Apt. 7, portón, edificio, referencia',
@@ -31,14 +31,14 @@ const copy = {
     serviceQuestion:'¿Qué servicio necesita?', chooseOption:'Seleccione una opción.', maintenance:'Mantenimiento preventivo', repair:'Reparación / Diagnóstico',
     installation:'Instalación', relocation:'Reubicación', estimate:'Cotización', equipmentInfo:'Información del equipo', equipmentType:'Tipo de equipo',
     floorCeiling:'Piso / Techo', centralUnit:'Unidad Central', notSure:'No estoy seguro', quantity:'Cantidad de unidades', capacity:'Capacidad aproximada', dontKnow:'No sé',
-    reviewTitle:'Revisa y completa tu solicitud', calendarTitle:'1. Seleccione su fecha antes de enviar',
-    calendarText:'Abra el calendario de Confirmafy, elija una fecha disponible y luego regrese a este cuestionario.',
+    reviewTitle:'Revisa y envía tu solicitud', calendarTitle:'Siguiente paso: seleccione su fecha',
+    calendarText:'Su cuestionario ya fue enviado a WhatsApp. Ahora abra Confirmafy y seleccione una fecha disponible.',
     calendarButton:'Abrir calendario y seleccionar fecha', calendarConfirm:'Confirmo que ya seleccioné mi fecha en Confirmafy.',
-    policyTitle:'⚠️ 2. Lectura obligatoria para clientes nuevos', policyInstruction:'Deslice dentro del recuadro hasta el final para habilitar el envío.',
+    policyTitle:'⚠️ Lectura obligatoria para clientes nuevos', policyInstruction:'Deslice dentro del recuadro hasta el final para habilitar el envío.',
     depositTitle:'Depósito obligatorio de $25', depositP1:'Todo cliente nuevo debe realizar un depósito de $25 después de seleccionar una fecha disponible.',
     depositP2:'El depósito es un requisito obligatorio para procesar y confirmar la primera cita.', depositP3:'Si no realiza el depósito, su cita no podrá ser confirmada.',
     depositP4:'El depósito se acredita al balance final del servicio. La cita queda sujeta a la verificación del pago por Oasis.', policyEnd:'Fin de la política.',
-    confirmInfo:'Confirmo que la información suministrada es correcta.', back:'Atrás', continue:'Continuar', sendWhatsApp:'Enviar cuestionario por WhatsApp',
+    confirmInfo:'Confirmo que la información suministrada es correcta.', back:'Atrás', continue:'Continuar', sendWhatsApp:'Enviar cuestionario por WhatsApp', sentTitle:'Cuestionario enviado', sentInstruction:'Ahora abra Confirmafy y seleccione la fecha disponible que prefiera.', newRequest:'Nueva solicitud',
     privacy:'🔒 Datos usados únicamente para coordinar su servicio.', step:'Paso', of:'de', required:'Complete este campo para continuar.',
     invalidPhone:'Ingrese un número de teléfono válido con 10 dígitos.', chooseService:'Seleccione el servicio que necesita.',
     maintenanceBlocked:'Este equipo requiere Reparación / Diagnóstico antes del mantenimiento. Regrese y cambie el tipo de servicio.',
@@ -64,7 +64,7 @@ const copy = {
   },
   en: {
     officialBadge:'Official form', title:'Service Request', coverage:'Oasis Air Cleaner Services LLC · Metropolitan Area',
-    changeLanguage:'Change language', introTitle:'Request your service in a few steps.', introText:'Complete the information, select an appointment date, and send the questionnaire through WhatsApp.',
+    changeLanguage:'Change language', introTitle:'Request your service in a few steps.', introText:'Complete the information and send the questionnaire through WhatsApp first. When you return, you can select the appointment date.',
     clientData:'Customer information', fullName:'Full name', fullNamePlaceholder:'Example: John Smith', phone:'Phone number', town:'Municipality', select:'Select',
     address:'Complete address', addressPlaceholder:'Street/road, number, neighborhood or condominium', location:'Location link or coordinates',
     locationPlaceholder:'Example: Google Maps link or 18.123456, -66.123456', access:'Apartment, access instructions, or reference', accessPlaceholder:'Example: Apt. 7, gate, building, landmark',
@@ -73,14 +73,14 @@ const copy = {
     serviceQuestion:'What service do you need?', chooseOption:'Select an option.', maintenance:'Preventive maintenance', repair:'Repair / Diagnostic',
     installation:'Installation', relocation:'Equipment relocation', estimate:'Estimate', equipmentInfo:'Equipment information', equipmentType:'Equipment type',
     floorCeiling:'Floor / Ceiling', centralUnit:'Central unit', notSure:'I am not sure', quantity:'Number of units', capacity:'Approximate capacity', dontKnow:'I do not know',
-    reviewTitle:'Review and complete your request', calendarTitle:'1. Select your appointment date before sending',
-    calendarText:'Open the Confirmafy calendar, select an available date, and then return to this questionnaire.',
+    reviewTitle:'Review and send your request', calendarTitle:'Next step: select your appointment date',
+    calendarText:'Your questionnaire has been sent to WhatsApp. Now open Confirmafy and select an available date.',
     calendarButton:'Open calendar and select a date', calendarConfirm:'I confirm that I selected my date in Confirmafy.',
-    policyTitle:'⚠️ 2. Required reading for new customers', policyInstruction:'Scroll inside the box to the bottom to enable submission.',
+    policyTitle:'⚠️ Required reading for new customers', policyInstruction:'Scroll inside the box to the bottom to enable submission.',
     depositTitle:'Mandatory $25 deposit', depositP1:'Every new customer must pay a $25 deposit after selecting an available appointment date.',
     depositP2:'The deposit is required to process and confirm the first appointment.', depositP3:'If the deposit is not paid, the appointment cannot be confirmed.',
     depositP4:'The deposit is credited toward the final service balance. The appointment is subject to payment verification by Oasis.', policyEnd:'End of policy.',
-    confirmInfo:'I confirm that the information provided is correct.', back:'Back', continue:'Continue', sendWhatsApp:'Send questionnaire through WhatsApp',
+    confirmInfo:'I confirm that the information provided is correct.', back:'Back', continue:'Continue', sendWhatsApp:'Send questionnaire through WhatsApp', sentTitle:'Questionnaire sent', sentInstruction:'Now open Confirmafy and select your preferred available appointment date.', newRequest:'New request',
     privacy:'🔒 Information is used only to coordinate your service.', step:'Step', of:'of', required:'Complete this field to continue.',
     invalidPhone:'Enter a valid 10-digit phone number.', chooseService:'Select the service you need.',
     maintenanceBlocked:'This unit requires Repair / Diagnostic service before maintenance. Go back and change the service type.',
@@ -110,7 +110,6 @@ let lang = 'es';
 let current = 0;
 let isNewClient = false;
 let policyRead = false;
-let calendarConfirmed = false;
 const serviceInput = form.elements.service;
 
 function tr(key) {
@@ -306,10 +305,7 @@ function displayValue(key, value) {
 function buildSummary() {
   const d = dataObject();
   isNewClient = d.existing === 'no';
-  calendarConfirmed = false;
-  calendarConfirmedInput.checked = false;
-  calendarCheckWrap.hidden = true;
-  depositPolicyGate.hidden = true;
+  depositPolicyGate.hidden = !isNewClient;
   policyRead = !isNewClient;
   depositPolicyScroll.scrollTop = 0;
   policyReadStatus.textContent = tr('policyScroll');
@@ -328,27 +324,9 @@ function escapeHtml(value) {
 }
 
 function updateSubmitAvailability() {
-  submitBtn.disabled = !calendarConfirmed || (isNewClient && !policyRead);
+  submitBtn.disabled = isNewClient && !policyRead;
   submitBtn.setAttribute('aria-disabled', submitBtn.disabled ? 'true' : 'false');
 }
-
-calendarBtn.addEventListener('click', function() {
-  calendarCheckWrap.hidden = false;
-});
-
-calendarConfirmedInput.addEventListener('change', function() {
-  calendarConfirmed = calendarConfirmedInput.checked;
-  if (isNewClient) {
-    depositPolicyGate.hidden = !calendarConfirmed;
-    if (!calendarConfirmed) {
-      policyRead = false;
-      depositPolicyScroll.scrollTop = 0;
-      policyReadStatus.textContent = tr('policyScroll');
-      policyReadStatus.classList.remove('read');
-    }
-  }
-  updateSubmitAvailability();
-});
 
 depositPolicyScroll.addEventListener('scroll', function() {
   if (!isNewClient || policyRead) return;
@@ -369,15 +347,35 @@ backBtnFinal.addEventListener('click', function() {
   }
 });
 
+function showAfterSend() {
+  languageCard.hidden = true;
+  formCard.hidden = true;
+  afterSendCard.hidden = false;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function saveSentFlow() {
+  try {
+    sessionStorage.setItem('oasisQuestionnaireSent', JSON.stringify({sent:true, lang:lang}));
+  } catch (_) {}
+}
+
+function restoreSentFlow() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem('oasisQuestionnaireSent') || 'null');
+    if (!saved || !saved.sent) return false;
+    if (saved.lang === 'es' || saved.lang === 'en') lang = saved.lang;
+    applyLanguage();
+    showAfterSend();
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 form.addEventListener('submit', function(event) {
   event.preventDefault();
   if (!validateStep()) return;
-
-  if (!calendarConfirmed) {
-    calendarCheckWrap.hidden = false;
-    addError(calendarConfirmedInput, tr('calendarRequired'));
-    return;
-  }
 
   if (isNewClient && !policyRead) {
     policyReadStatus.textContent = tr('policyMustRead');
@@ -392,8 +390,6 @@ form.addEventListener('submit', function(event) {
     .filter(function(entry) { return entry[1] && entry[0] !== 'confirm'; })
     .forEach(function(entry) { lines.push('*' + labelize(entry[0]) + ':* ' + displayValue(entry[0], entry[1])); });
 
-  lines.push('', tr('dateSelected'));
-
   if (isNewClient) {
     lines.push('', '*' + tr('depositWarning') + '*');
     lines.push(tr('depositInstruction'));
@@ -405,8 +401,24 @@ form.addEventListener('submit', function(event) {
   }
 
   lines.push('', tr('sentFromForm'));
+  saveSentFlow();
+  showAfterSend();
   window.location.href = 'https://wa.me/17876643079?text=' + encodeURIComponent(lines.join('\n'));
+});
+
+calendarBtn.addEventListener('click', function() {
+  calendarBtn.classList.add('calendar-opened');
+});
+
+startOverBtn.addEventListener('click', function() {
+  try { sessionStorage.removeItem('oasisQuestionnaireSent'); } catch (_) {}
+  window.location.reload();
+});
+
+window.addEventListener('pageshow', function() {
+  restoreSentFlow();
 });
 
 applyLanguage();
 updateSubmitAvailability();
+restoreSentFlow();
