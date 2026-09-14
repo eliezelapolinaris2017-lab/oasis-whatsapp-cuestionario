@@ -18,6 +18,9 @@ const calendarBtn = document.getElementById('calendarBtn');
 const afterSendCard = document.getElementById('afterSendCard');
 const startOverBtn = document.getElementById('startOverBtn');
 const changeLanguageBtn = document.getElementById('changeLanguageBtn');
+const returnModal = document.getElementById('returnModal');
+const continueWhatsAppBtn = document.getElementById('continueWhatsAppBtn');
+const cancelWhatsAppBtn = document.getElementById('cancelWhatsAppBtn');
 
 const copy = {
   es: {
@@ -38,7 +41,7 @@ const copy = {
     depositTitle:'Depósito obligatorio de $25', depositP1:'Todo cliente nuevo debe realizar un depósito de $25 después de seleccionar una fecha disponible.',
     depositP2:'El depósito es un requisito obligatorio para procesar y confirmar la primera cita.', depositP3:'Si no realiza el depósito, su cita no podrá ser confirmada.',
     depositP4:'El depósito se acredita al balance final del servicio. La cita queda sujeta a la verificación del pago por Oasis.', policyEnd:'Fin de la política.',
-    confirmInfo:'Confirmo que la información suministrada es correcta.', back:'Atrás', continue:'Continuar', sendWhatsApp:'Enviar cuestionario por WhatsApp', sentTitle:'Cuestionario enviado', sentInstruction:'Ahora abra Confirmafy y seleccione la fecha disponible que prefiera.', newRequest:'Nueva solicitud',
+    confirmInfo:'Confirmo que la información suministrada es correcta.', back:'Atrás', continue:'Continuar', sendWhatsApp:'Enviar cuestionario por WhatsApp', sentTitle:'Cuestionario enviado', sentInstruction:'Ahora abra Confirmafy y seleccione la fecha disponible que prefiera.', newRequest:'Nueva solicitud', returnModalTitle:'¡Importante!', returnModalText:'Luego de enviar el cuestionario por WhatsApp, regrese nuevamente a esta página para seleccionar la fecha de su cita.', continueWhatsApp:'Entendido, continuar a WhatsApp', cancel:'Volver',
     privacy:'🔒 Datos usados únicamente para coordinar su servicio.', step:'Paso', of:'de', required:'Complete este campo para continuar.',
     invalidPhone:'Ingrese un número de teléfono válido con 10 dígitos.', chooseService:'Seleccione el servicio que necesita.',
     maintenanceBlocked:'Este equipo requiere Reparación / Diagnóstico antes del mantenimiento. Regrese y cambie el tipo de servicio.',
@@ -80,7 +83,7 @@ const copy = {
     depositTitle:'Mandatory $25 deposit', depositP1:'Every new customer must pay a $25 deposit after selecting an available appointment date.',
     depositP2:'The deposit is required to process and confirm the first appointment.', depositP3:'If the deposit is not paid, the appointment cannot be confirmed.',
     depositP4:'The deposit is credited toward the final service balance. The appointment is subject to payment verification by Oasis.', policyEnd:'End of policy.',
-    confirmInfo:'I confirm that the information provided is correct.', back:'Back', continue:'Continue', sendWhatsApp:'Send questionnaire through WhatsApp', sentTitle:'Questionnaire sent', sentInstruction:'Now open Confirmafy and select your preferred available appointment date.', newRequest:'New request',
+    confirmInfo:'I confirm that the information provided is correct.', back:'Back', continue:'Continue', sendWhatsApp:'Send questionnaire through WhatsApp', sentTitle:'Questionnaire sent', sentInstruction:'Now open Confirmafy and select your preferred available appointment date.', newRequest:'New request', returnModalTitle:'Important!', returnModalText:'After sending the questionnaire through WhatsApp, return to this page to select your appointment date.', continueWhatsApp:'Understood, continue to WhatsApp', cancel:'Go back',
     privacy:'🔒 Information is used only to coordinate your service.', step:'Step', of:'of', required:'Complete this field to continue.',
     invalidPhone:'Enter a valid 10-digit phone number.', chooseService:'Select the service you need.',
     maintenanceBlocked:'This unit requires Repair / Diagnostic service before maintenance. Go back and change the service type.',
@@ -110,6 +113,7 @@ let lang = 'es';
 let current = 0;
 let isNewClient = false;
 let policyRead = false;
+let pendingWhatsAppUrl = '';
 const serviceInput = form.elements.service;
 
 function tr(key) {
@@ -401,9 +405,28 @@ form.addEventListener('submit', function(event) {
   }
 
   lines.push('', tr('sentFromForm'));
+  pendingWhatsAppUrl = 'https://wa.me/17876643079?text=' + encodeURIComponent(lines.join('\n'));
+  returnModal.hidden = false;
+  document.body.classList.add('modal-open');
+  continueWhatsAppBtn.focus();
+});
+
+continueWhatsAppBtn.addEventListener('click', function() {
+  if (!pendingWhatsAppUrl) return;
+  const destination = pendingWhatsAppUrl;
+  pendingWhatsAppUrl = '';
+  returnModal.hidden = true;
+  document.body.classList.remove('modal-open');
   saveSentFlow();
   showAfterSend();
-  window.location.href = 'https://wa.me/17876643079?text=' + encodeURIComponent(lines.join('\n'));
+  window.location.href = destination;
+});
+
+cancelWhatsAppBtn.addEventListener('click', function() {
+  returnModal.hidden = true;
+  document.body.classList.remove('modal-open');
+  pendingWhatsAppUrl = '';
+  submitBtn.focus();
 });
 
 calendarBtn.addEventListener('click', function() {
