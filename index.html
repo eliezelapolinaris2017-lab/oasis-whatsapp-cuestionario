@@ -87,16 +87,10 @@
         <section class="step" data-step="4"><div id="dynamicQuestions"></div></section>
 
         <section class="step" data-step="5">
-          <h2 data-i18n="reviewTitle">Revisa y completa tu solicitud</h2>
+          <h2 data-i18n="reviewTitle">Revisa y envía tu solicitud</h2>
           <div id="summary" class="summary"></div>
-          <div class="calendar-gate">
-            <strong data-i18n="calendarTitle">1. Seleccione su fecha antes de enviar</strong>
-            <p data-i18n="calendarText">Abra el calendario de Confirmafy, elija una fecha disponible y luego regrese a este cuestionario.</p>
-            <a id="calendarBtn" class="btn primary" href="https://confirmafy.com/oasis-services-pr" target="_blank" rel="noopener" data-i18n="calendarButton">Abrir calendario y seleccionar fecha</a>
-            <label class="checkline calendar-check" id="calendarCheckWrap" hidden><input type="checkbox" id="calendarConfirmed" /><span data-i18n="calendarConfirm">Confirmo que ya seleccioné mi fecha en Confirmafy.</span></label>
-          </div>
           <div class="policy-gate" id="depositPolicyGate" hidden>
-            <strong data-i18n="policyTitle">⚠️ 2. Lectura obligatoria para clientes nuevos</strong>
+            <strong data-i18n="policyTitle">⚠️ Lectura obligatoria para clientes nuevos</strong>
             <p data-i18n="policyInstruction">Deslice dentro del recuadro hasta el final para habilitar el envío.</p>
             <div class="policy-scroll" id="depositPolicyScroll" tabindex="0" aria-label="Política de depósito obligatorio">
               <p><strong data-i18n="depositTitle">Depósito obligatorio de $25</strong></p>
@@ -109,12 +103,25 @@
             <div class="policy-status" id="policyReadStatus">↓ Deslice hasta el final para continuar.</div>
           </div>
           <label class="checkline"><input type="checkbox" name="confirm" required /><span data-i18n="confirmInfo">Confirmo que la información suministrada es correcta.</span></label>
-          <div class="actions final-actions"><button type="button" id="backBtnFinal" class="btn secondary" data-i18n="back">Atrás</button><button type="submit" id="submitBtn" class="btn primary" disabled data-i18n="sendWhatsApp">Enviar cuestionario por WhatsApp</button></div>
+          <div class="actions final-actions"><button type="button" id="backBtnFinal" class="btn secondary" data-i18n="back">Atrás</button><button type="submit" id="submitBtn" class="btn whatsapp" disabled data-i18n="sendWhatsApp">Enviar cuestionario por WhatsApp</button></div>
         </section>
 
         <div class="actions" id="navigationActions"><button type="button" id="backBtn" class="btn secondary" hidden data-i18n="back">Atrás</button><button type="button" id="nextBtn" class="btn primary" data-i18n="continue">Continuar</button></div>
       </form>
       <div class="trust-row"><span data-i18n="privacy">🔒 Datos usados únicamente para coordinar su servicio.</span><span>📞 787-664-3079</span></div>
+    </section>
+    <section class="card after-send-card" id="afterSendCard" hidden>
+      <img class="language-logo" src="logo.svg" alt="Oasis Air Cleaner Services LLC" />
+      <div class="success">✓</div>
+      <h2 data-i18n="sentTitle">Cuestionario enviado</h2>
+      <p data-i18n="sentInstruction">Ahora abra Confirmafy y seleccione la fecha disponible que prefiera.</p>
+      <div class="calendar-gate">
+        <strong data-i18n="calendarTitle">Siguiente paso: seleccione su fecha</strong>
+        <p data-i18n="calendarText">Su información ya fue preparada para WhatsApp. Ahora puede entrar al calendario sin perder el cuestionario.</p>
+        <a id="calendarBtn" class="btn primary" href="https://confirmafy.com/oasis-services-pr" target="_blank" rel="noopener" data-i18n="calendarButton">Abrir calendario y seleccionar fecha</a>
+      </div>
+      <button type="button" id="startOverBtn" class="btn secondary" data-i18n="newRequest">Nueva solicitud</button>
+      <small class="fineprint">Oasis Air Cleaner Services LLC · 787-664-3079</small>
     </section>
   </main>
   <script src="app.js"></script>
